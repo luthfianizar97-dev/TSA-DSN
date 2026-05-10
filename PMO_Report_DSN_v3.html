@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMO Weekly Report — TSA DSN Project</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg0: #0C1117;
+  --bg1: #131920;
+  --bg2: #1A2330;
+  --bg3: #1F2A3A;
+  --bg4: #253040;
+  --line: rgba(255,255,255,0.06);
+  --line2: rgba(255,255,255,0.10);
+  --t1: #F0F4F8;
+  --t2: #8CA0B8;
+  --t3: #506070;
+  --teal: #10B981;
+  --teal2: #059669;
+  --teal-bg: rgba(16,185,129,0.10);
+  --teal-line: rgba(16,185,129,0.30);
+  --gold: #F59E0B;
+  --gold-bg: rgba(245,158,11,0.10);
+  --gold-line: rgba(245,158,11,0.30);
+  --red: #EF4444;
+  --red-bg: rgba(239,68,68,0.10);
+  --red-line: rgba(239,68,68,0.30);
+  --sky: #38BDF8;
+  --sky-bg: rgba(56,189,248,0.10);
+  --sky-line: rgba(56,189,248,0.30);
+  --purple: #A78BFA;
+  --purple-bg: rgba(167,139,250,0.10);
+  --purple-line: rgba(167,139,250,0.30);
+  --r4: 4px; --r8: 8px; --r12: 12px; --r16: 16px; --r20: 20px;
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg0);
+  color: var(--t1);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--bg1);
+  border-bottom: 1px solid var(--line2);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.brand {
+  padding: 1rem 0;
+  margin-right: 2rem;
+  flex-shrink: 0;
+}
+.brand-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--teal); margin-right: 8px; animation: pulse 2.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+.brand-name { font-size: 13px; font-weight: 700; color: var(--t1); letter-spacing: .03em; }
+.brand-sub { font-size: 11px; color: var(--t3); margin-top: 1px; }
+
+.nav { display: flex; align-items: stretch; gap: 0; }
+.nav-btn {
+  padding: .9rem 1.1rem;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--t3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+  user-select: none;
+}
+.nav-btn:hover { color: var(--t2); }
+.nav-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+
+.topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: 11.5px;
+  color: var(--t3);
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.pill-teal  { background: var(--teal-bg); color: var(--teal); border: 1px solid var(--teal-line); }
+.pill-gold  { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-line); }
+.pill-red   { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-line); }
+.pill-sky   { background: var(--sky-bg); color: var(--sky); border: 1px solid var(--sky-line); }
+.pill-gray  { background: rgba(80,96,112,.15); color: var(--t2); border: 1px solid rgba(80,96,112,.25); }
+.pill-purple{ background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-line); }
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── LAYOUT ── */
+.main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--t3);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 2px; height: 14px;
+  background: var(--teal);
+  border-radius: 2px;
+}
+
+/* ── KPI GRID ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line2); border-radius: var(--r16); overflow: hidden; margin-bottom: 1.5rem; }
+.kpi-card {
+  background: var(--bg2);
+  padding: 1.2rem 1.4rem;
+  position: relative;
+}
+.kpi-card:hover { background: var(--bg3); }
+.kpi-label { font-size: 11px; color: var(--t3); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .4rem; }
+.kpi-val {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.kpi-val.c-teal { color: var(--teal); }
+.kpi-val.c-gold  { color: var(--gold); }
+.kpi-val.c-red   { color: var(--red); }
+.kpi-val.c-sky   { color: var(--sky); }
+.kpi-val.c-white { color: var(--t1); }
+.kpi-sub { font-size: 11.5px; color: var(--t3); margin-top: .35rem; }
+.kpi-stripe { position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.kpi-stripe.teal { background: var(--teal); }
+.kpi-stripe.gold { background: var(--gold); }
+.kpi-stripe.red  { background: var(--red); }
+.kpi-stripe.sky  { background: var(--sky); }
+
+/* ── CHARTS ROW ── */
+.chart-row { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 1rem; margin-bottom: 1.5rem; }
+.chart-card {
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r16);
+  padding: 1.2rem 1.4rem;
+}
+.chart-card-wide { grid-column: span 1; }
+.chart-title { font-size: 12px; font-weight: 600; color: var(--t2); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 1rem; }
+
+/* custom legends */
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: .75rem; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--t2); }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── FULL CHART ── */
+.chart-full {
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r16);
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ── TICKET CARDS ── */
+.ticket-list { display: flex; flex-direction: column; gap: .75rem; }
+.ticket-card {
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r16);
+  overflow: hidden;
+  transition: border-color .15s;
+}
+.ticket-card:hover { border-color: var(--line2); border-color: rgba(16,185,129,.25); }
+.ticket-header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  user-select: none;
+}
+.ticket-id {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--teal);
+  flex-shrink: 0;
+  min-width: 70px;
+}
+.ticket-title {
+  flex: 1;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--t1);
+  line-height: 1.4;
+}
+.ticket-meta { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
+.chevron { color: var(--t3); font-size: 12px; transition: transform .2s; flex-shrink: 0; }
+.ticket-card.open .chevron { transform: rotate(180deg); }
+
+.ticket-body {
+  display: none;
+  border-top: 1px solid var(--line);
+}
+.ticket-card.open .ticket-body { display: block; }
+.ticket-body-inner { padding: 1.2rem; }
+
+.info-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin-bottom: 1.2rem; }
+.info-cell { }
+.info-key { font-size: 10.5px; color: var(--t3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
+.info-val { font-size: 12.5px; color: var(--t1); font-weight: 500; }
+
+.solution-box {
+  background: rgba(16,185,129,.05);
+  border: 1px solid rgba(16,185,129,.15);
+  border-radius: var(--r12);
+  padding: .9rem 1.1rem;
+  margin-bottom: .75rem;
+}
+.solution-box-label { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; color: var(--teal); text-transform: uppercase; margin-bottom: .4rem; }
+.solution-box p { font-size: 12.5px; color: var(--t2); line-height: 1.6; }
+
+.next-box {
+  background: rgba(245,158,11,.05);
+  border: 1px solid rgba(245,158,11,.15);
+  border-radius: var(--r12);
+  padding: .9rem 1.1rem;
+}
+.next-box-label { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; color: var(--gold); text-transform: uppercase; margin-bottom: .4rem; }
+.next-box p { font-size: 12.5px; color: var(--t2); line-height: 1.6; }
+
+/* SLA bar */
+.sla-row { display: flex; align-items: center; gap: 10px; margin-top: 1rem; }
+.sla-label { font-size: 11px; color: var(--t3); min-width: 65px; }
+.sla-track { flex: 1; height: 4px; background: var(--bg4); border-radius: 2px; overflow: hidden; }
+.sla-fill { height: 100%; border-radius: 2px; }
+.sla-val { font-size: 11px; font-weight: 600; min-width: 100px; text-align: right; }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 1.5rem; }
+.timeline::before { content: ''; position: absolute; left: 4px; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(to bottom, var(--teal), rgba(16,185,129,.1)); }
+.tl-item { position: relative; margin-bottom: 1.2rem; }
+.tl-dot {
+  position: absolute;
+  left: -1.5rem;
+  top: 3px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--teal);
+  background: var(--bg0);
+}
+.tl-dot.done  { background: var(--teal); border-color: var(--teal); }
+.tl-dot.now   { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,158,11,.2); }
+.tl-dot.future{ background: var(--bg0); border-color: var(--t3); }
+.tl-week { font-size: 11px; font-weight: 700; color: var(--teal); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 2px; }
+.tl-week.now-week { color: var(--gold); }
+.tl-period { font-size: 11px; color: var(--t3); margin-bottom: .5rem; }
+.tl-card {
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r12);
+  padding: .9rem 1.1rem;
+  font-size: 12.5px;
+  color: var(--t2);
+  line-height: 1.7;
+}
+.tl-card.now-card { border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.04); }
+.tl-card.future-card { opacity: .5; }
+.tl-card ul { padding-left: 1.2rem; }
+.tl-card li { margin-bottom: 3px; }
+.tl-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: .7rem; }
+
+/* ── TIMESHEET ── */
+.ts-week-header {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: .6rem 1rem;
+  background: var(--bg3);
+  border-radius: var(--r8);
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ts-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  font-size: 12.5px;
+}
+.ts-table thead th {
+  padding: .5rem .8rem;
+  text-align: left;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  color: var(--t3);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line2);
+}
+.ts-table tbody tr { border-bottom: 1px solid var(--line); }
+.ts-table tbody tr:hover { background: rgba(255,255,255,.02); }
+.ts-table tbody td { padding: .55rem .8rem; color: var(--t2); vertical-align: middle; }
+.ts-table tfoot td {
+  padding: .6rem .8rem;
+  font-weight: 700;
+  color: var(--teal);
+  font-size: 12px;
+  border-top: 1px solid var(--line2);
+  background: rgba(16,185,129,.04);
+}
+.type-chip {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: var(--r4);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.type-dev     { background: var(--sky-bg); color: var(--sky); }
+.type-ba      { background: var(--teal-bg); color: var(--teal); }
+.type-meeting { background: var(--gold-bg); color: var(--gold); }
+.type-qa      { background: var(--red-bg); color: var(--red); }
+.type-off     { background: rgba(80,96,112,.1); color: var(--t3); }
+
+.ts-grand {
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r16);
+  padding: 1.2rem 1.4rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background-color: var(--line2);
+  overflow: hidden;
+}
+.ts-grand-cell { background: var(--bg2); padding: .9rem 1rem; }
+.ts-grand-label { font-size: 10.5px; color: var(--t3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: .3rem; }
+.ts-grand-val { font-size: 1.4rem; font-weight: 800; }
+
+/* ── CONTRACT ── */
+.contract-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+.cbox {
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r16);
+  padding: 1.2rem 1.4rem;
+}
+.cbox-title { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--teal); margin-bottom: .9rem; }
+.cbox-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: .45rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12.5px;
+}
+.cbox-row:last-child { border-bottom: none; }
+.cbox-key { color: var(--t3); flex-shrink: 0; }
+.cbox-val { color: var(--t1); font-weight: 500; text-align: right; }
+.cbox-val.teal { color: var(--teal); }
+.cbox-val.gold  { color: var(--gold); }
+.cbox-val.sky   { color: var(--sky); }
+
+/* ── SLA TABLE ── */
+.sla-full-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.sla-full-table thead th {
+  padding: .6rem 1rem;
+  text-align: left;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  color: var(--t3);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line2);
+  background: var(--bg3);
+}
+.sla-full-table thead th:first-child { border-radius: var(--r8) 0 0 0; }
+.sla-full-table thead th:last-child { border-radius: 0 var(--r8) 0 0; }
+.sla-full-table tbody tr { border-bottom: 1px solid var(--line); }
+.sla-full-table tbody tr:hover { background: rgba(255,255,255,.02); }
+.sla-full-table tbody td { padding: .65rem 1rem; color: var(--t2); vertical-align: middle; }
+.table-wrap2 {
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--r16);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+/* ── PRIORITY BADGE ── */
+.prio {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: var(--r4);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.prio-critical { background: rgba(239,68,68,.2); color: var(--red); border: 1px solid rgba(239,68,68,.35); }
+.prio-high { background: rgba(239,68,68,.12); color: #f87171; border: 1px solid rgba(239,68,68,.25); }
+.prio-medium { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-line); }
+.prio-low { background: rgba(80,96,112,.12); color: var(--t3); border: 1px solid rgba(80,96,112,.2); }
+
+/* ── VARIANCE CHIP ── */
+.var-chip {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--r4);
+}
+.var-ok { color: var(--teal); background: var(--teal-bg); }
+.var-late { color: var(--red); background: var(--red-bg); }
+.var-na { color: var(--t3); }
+
+/* ── COMPANY TAG ── */
+.co-tag {
+  display: inline-block;
+  font-size: 10.5px;
+  color: var(--sky);
+  background: var(--sky-bg);
+  padding: 1px 6px;
+  border-radius: var(--r4);
+}
+
+/* ── FOOTER ── */
+.footer {
+  border-top: 1px solid var(--line2);
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--t3);
+  margin-top: 3rem;
+}
+
+/* ── WARNING BANNER ── */
+.warn-banner {
+  background: rgba(245,158,11,.06);
+  border: 1px solid rgba(245,158,11,.2);
+  border-radius: var(--r12);
+  padding: .75rem 1rem;
+  font-size: 12px;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.warn-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+/* ── STATUS FLOW ── */
+.sf-step { display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:90px; }
+.sf-dot { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0; }
+.sf-label { font-size:10.5px;font-weight:600;text-align:center;line-height:1.3; }
+.sf-arrow { color:var(--t3);font-size:16px;margin-bottom:16px;flex-shrink:0;padding:0 2px; }
+.sf-gray   .sf-dot { background:rgba(80,96,112,.2);color:var(--t2); } .sf-gray   .sf-label { color:var(--t2); }
+.sf-sky    .sf-dot { background:var(--sky-bg);color:var(--sky); } .sf-sky    .sf-label { color:var(--sky); }
+.sf-purple .sf-dot { background:var(--purple-bg);color:var(--purple); } .sf-purple .sf-label { color:var(--purple); }
+.sf-gold   .sf-dot { background:var(--gold-bg);color:var(--gold); } .sf-gold   .sf-label { color:var(--gold); }
+.sf-teal2  .sf-dot { background:rgba(16,185,129,.2);color:#34d399; } .sf-teal2  .sf-label { color:#34d399; }
+.sf-teal   .sf-dot { background:var(--teal-bg);color:var(--teal); } .sf-teal   .sf-label { color:var(--teal); }
+
+/* new status pills */
+.pill-request  { background:rgba(80,96,112,.15);color:var(--t2);border:1px solid rgba(80,96,112,.25); }
+.pill-nti      { background:var(--sky-bg);color:var(--sky);border:1px solid var(--sky-line); }
+.pill-exec-dsn { background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-line); }
+.pill-prog-dsn { background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-line); }
+.pill-test     { background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.3); }
+.pill-done     { background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-line); }
+.pill-revision { background:var(--red-bg);color:var(--red);border:1px solid var(--red-line); }
+
+/* stage stepper inside ticket */
+.stg { font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;white-space:nowrap; }
+.stg-done   { background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-line); }
+.stg-active { background:var(--sky-bg);color:var(--sky);border:1px solid var(--sky-line);box-shadow:0 0 0 2px rgba(56,189,248,.15); }
+.stg-skip   { background:rgba(255,255,255,.03);color:var(--t3);border:1px solid var(--line); }
+.stg-revise { background:var(--red-bg);color:var(--red);border:1px solid var(--red-line); }
+.stg-arr    { color:var(--t3);font-size:12px;padding:0 3px;flex-shrink:0; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg0); }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2,1fr); }
+  .chart-row { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: repeat(2,1fr); }
+  .ts-grand { grid-template-columns: repeat(3,1fr); }
+  .contract-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .main { padding: 1rem; }
+  .topbar { padding: 0 1rem; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOP NAV ── -->
+<div class="topbar">
+  <div class="brand">
+    <div><span class="brand-dot"></span><span class="brand-name">NTI × DSN Group</span></div>
+    <div class="brand-sub">Odoo ERP Enhancement · TSA Project</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-btn active" onclick="gotoTab(this,'overview')">Dashboard</div>
+    <div class="nav-btn" onclick="gotoTab(this,'tickets')">Tickets</div>
+    <div class="nav-btn" onclick="gotoTab(this,'weekly')">Weekly Log</div>
+    <div class="nav-btn" onclick="gotoTab(this,'timesheet')">Timesheet</div>
+    <div class="nav-btn" onclick="gotoTab(this,'contract')">Kontrak & SLA</div>
+  </nav>
+  <div class="topbar-right">
+    <span>4 Mei 2026</span>
+    <span class="pill pill-teal">Week 4</span>
+  </div>
+</div>
+
+
+<!-- ══════════════ DASHBOARD ══════════════ -->
+<div id="tab-overview" class="page active">
+<div class="main">
+
+  <div class="warn-banner">
+    <span class="warn-dot"></span>
+    <span><strong>Perhatian:</strong> TSA-003 (jurnal otomatis 2026) &amp; TSA-004 (approval retur Kanban) masih berlangsung. TSA-008 baru masuk status Open.</span>
+  </div>
+
+  <!-- KPI Row 1 -->
+  <div class="section-label">Ringkasan Proyek</div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kpi-card"><div class="kpi-stripe teal"></div><div class="kpi-label">Total Tiket</div><div class="kpi-val c-white">8</div><div class="kpi-sub">TSA-001 s/d TSA-008</div></div>
+    <div class="kpi-card"><div class="kpi-stripe teal"></div><div class="kpi-label">Resolved</div><div class="kpi-val c-teal">5</div><div class="kpi-sub">TSA-001, 002, 005, 006, 007</div></div>
+    <div class="kpi-card"><div class="kpi-stripe sky"></div><div class="kpi-label">In Progress / On-Going</div><div class="kpi-val c-sky">2</div><div class="kpi-sub">TSA-003, TSA-004</div></div>
+    <div class="kpi-card"><div class="kpi-stripe red"></div><div class="kpi-label">Open</div><div class="kpi-val c-red">1</div><div class="kpi-sub">TSA-008 — baru masuk</div></div>
+    <div class="kpi-card"><div class="kpi-stripe gold"></div><div class="kpi-label">SLA Overdue</div><div class="kpi-val c-gold">0</div><div class="kpi-sub">Semua tepat / lebih cepat</div></div>
+  </div>
+
+  <!-- KPI Row 2 -->
+  <div class="kpi-grid" style="margin-top:1px">
+    <div class="kpi-card"><div class="kpi-label">Minggu Berjalan</div><div class="kpi-val c-white">4</div><div class="kpi-sub">dari 14 minggu kontrak</div></div>
+    <div class="kpi-card"><div class="kpi-label">Resolusi Rate</div><div class="kpi-val c-teal">62.5%</div><div class="kpi-sub">5 dari 8 tiket selesai</div></div>
+    <div class="kpi-card"><div class="kpi-stripe gold"></div><div class="kpi-label">Kontrak Berakhir</div><div class="kpi-val c-gold" style="font-size:1.35rem">18 Jul 2026</div><div class="kpi-sub">69 hari lagi dari hari ini</div></div>
+    <div class="kpi-card"><div class="kpi-stripe red"></div><div class="kpi-label">Follow-up New Contract</div><div class="kpi-val c-red" style="font-size:1.35rem">4 Jul 2026</div><div class="kpi-sub">H-14 dari kontrak berakhir</div></div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="section-label" style="margin-top:1.5rem">Analitik</div>
+  <div class="chart-row">
+
+    <!-- Donut Status -->
+    <div class="chart-card">
+      <div class="chart-title">Status Tiket</div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#10B981"></span>Resolved 5</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#38BDF8"></span>On-Going 2</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#EF4444"></span>Open 1</span>
+      </div>
+      <div style="position:relative;height:170px">
+        <canvas id="cStatus" role="img" aria-label="Donut chart: 5 Resolved, 2 On-Going/In Progress, 1 Open">Status tiket: 5 Resolved, 2 On-Going, 1 Open.</canvas>
+      </div>
+    </div>
+
+    <!-- Donut Kategori -->
+    <div class="chart-card">
+      <div class="chart-title">Kategori Issue</div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#38BDF8"></span>Technical 5</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#A78BFA"></span>Functional 3</span>
+      </div>
+      <div style="position:relative;height:170px">
+        <canvas id="cKat" role="img" aria-label="Donut chart: 5 Technical, 3 Functional">Kategori: 5 Technical, 3 Functional.</canvas>
+      </div>
+    </div>
+
+    <!-- Bar SLA Variance -->
+    <div class="chart-card">
+      <div class="chart-title">SLA Variance per Tiket (hari)</div>
+      <div style="position:relative;height:200px">
+        <canvas id="cSLA" role="img" aria-label="Horizontal bar chart showing SLA variance per ticket. TSA-002 is 0, all others negative (faster than SLA).">SLA variance: TSA-001: -6, TSA-002: -1, TSA-005: -6, TSA-006: -2, TSA-007: -2.</canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Weekly trend -->
+  <div class="chart-full">
+    <div class="chart-title">Aktivitas Mingguan — Tiket Masuk &amp; Diselesaikan</div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#10B981;border-radius:50%"></span>Tiket Masuk</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#38BDF8;border-radius:50%"></span>Tiket Selesai</span>
+    </div>
+    <div style="position:relative;height:160px">
+      <canvas id="cWeekly" role="img" aria-label="Line chart of weekly ticket volume">Tiket masuk/selesai per minggu.</canvas>
+    </div>
+  </div>
+
+  <!-- Quick status table -->
+  <div class="section-label">Status Semua Tiket</div>
+  <div class="table-wrap2">
+    <table class="sla-full-table">
+      <thead><tr>
+        <th>Tiket</th><th>Deskripsi Singkat</th><th>Perusahaan</th>
+        <th>Prioritas</th><th>Status</th><th>SLA</th><th>Aktual</th><th>Variance</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="font-family:var(--mono);color:var(--teal)">TSA-001</td><td>Field 'Industry' required tidak muncul di form Partner</td><td><span class="co-tag">DSN Group</span></td><td><span class="prio prio-high">High</span></td><td><span class="pill pill-done">Done</span></td><td>7h</td><td>1h</td><td><span class="var-chip var-ok">-6</span></td></tr>
+        <tr><td style="font-family:var(--mono);color:var(--teal)">TSA-002</td><td>SMTP server restrict email non-@dsngroup.co.id</td><td><span class="co-tag">DSN Group</span></td><td><span class="prio prio-high">High</span></td><td><span class="pill pill-done">Done</span></td><td>5h</td><td>4h</td><td><span class="var-chip var-ok">-1</span></td></tr>
+        <tr><td style="font-family:var(--mono);color:var(--teal)">TSA-003</td><td>Jurnal alokasi otomatis tidak terbentuk sejak Jan 2026</td><td><span class="co-tag">DSN / DSNU</span></td><td><span class="prio prio-high">High</span></td><td><span class="pill pill-nti">On Progress NTI</span></td><td>10h</td><td>—</td><td><span class="var-chip var-na">TBD</span></td></tr>
+        <tr><td style="font-family:var(--mono);color:var(--teal)">TSA-004</td><td>RPC error approval retur Kanban — datetime concat bug</td><td><span class="co-tag">PT Panyindangan</span></td><td><span class="prio prio-high">High</span></td><td><span class="pill pill-nti">On Progress NTI</span></td><td>7h</td><td>—</td><td><span class="var-chip var-na">TBD</span></td></tr>
+        <tr><td style="font-family:var(--mono);color:var(--teal)">TSA-005</td><td>Nomor Vendor Bill prefix DCV+I, seharusnya BILL</td><td><span class="co-tag">PT DPP Corn</span></td><td><span class="prio prio-medium">Medium</span></td><td><span class="pill pill-done">Done</span></td><td>7h</td><td>1h</td><td><span class="var-chip var-ok">-6</span></td></tr>
+        <tr><td style="font-family:var(--mono);color:var(--teal)">TSA-006</td><td>Error vendor bill dari multiple PO — Singleton ValueError</td><td><span class="co-tag">PT DPP Corn</span></td><td><span class="prio prio-high">High</span></td><td><span class="pill pill-done">Done</span></td><td>3h</td><td>1h</td><td><span class="var-chip var-ok">-2</span></td></tr>
+        <tr><td style="font-family:var(--mono);color:var(--teal)">TSA-007</td><td>Error register payment petty cash — journal kosong</td><td><span class="co-tag">DPP + PUL</span></td><td><span class="prio prio-medium">Medium</span></td><td><span class="pill pill-done">Done</span></td><td>3h</td><td>1h</td><td><span class="var-chip var-ok">-2</span></td></tr>
+        <tr><td style="font-family:var(--mono);color:var(--teal)">TSA-008</td><td>Contra account Ha Management tidak terbaca (GL 513/521)</td><td><span class="co-tag">PT PUL Palm Oil</span></td><td><span class="prio prio-high">High</span></td><td><span class="pill pill-request">Request</span></td><td>7h</td><td>—</td><td><span class="var-chip var-na">—</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</div>
+
+
+<!-- ══════════════ TICKETS ══════════════ -->
+<div id="tab-tickets" class="page">
+<div class="main">
+
+  <!-- Status Flow Diagram -->
+  <div class="section-label">Alur Status Tiket</div>
+  <div style="background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r16);padding:1.2rem 1.4rem;margin-bottom:1.5rem;overflow-x:auto">
+    <div style="display:flex;align-items:center;gap:0;min-width:700px;position:relative">
+
+      <!-- Step bubbles -->
+      <div class="sf-step sf-gray">
+        <div class="sf-dot">1</div>
+        <div class="sf-label">Request</div>
+      </div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-step sf-sky">
+        <div class="sf-dot">2</div>
+        <div class="sf-label">On Progress NTI</div>
+      </div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-step sf-purple">
+        <div class="sf-dot">3</div>
+        <div class="sf-label">Ready to Execute DSN</div>
+      </div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-step sf-gold">
+        <div class="sf-dot">4</div>
+        <div class="sf-label">On Progress DSN</div>
+      </div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-step sf-teal2">
+        <div class="sf-dot">5</div>
+        <div class="sf-label">Ready to Test User</div>
+      </div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-step sf-teal">
+        <div class="sf-dot">6</div>
+        <div class="sf-label">Done</div>
+      </div>
+    </div>
+    <!-- Return paths -->
+    <div style="margin-top:.9rem;display:flex;gap:.75rem;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--red)">
+        <span style="font-size:13px">↩</span>
+        <span><strong>Revision</strong> — dari status manapun bisa kembali ke On Progress NTI dan dicatat di Status Log</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gold)">
+        <span style="font-size:13px">↩</span>
+        <span><strong>Ready to Execute DSN → On Progress NTI</strong> — jika ada temuan saat eksekusi DSN</span>
+      </div>
+    </div>
+    <div style="margin-top:.7rem;font-size:11px;color:var(--t3);border-top:1px solid var(--line);padding-top:.7rem">
+      Setiap perubahan status dicatat di kolom <strong style="color:var(--t2)">Status Log</strong> pada Excel tracker dengan format:
+      <code style="font-family:var(--mono);font-size:10.5px;background:rgba(255,255,255,.06);padding:1px 6px;border-radius:3px;margin-left:4px">15/04 Request → 16/04 On Progress NTI → 20/04 Ready to Execute DSN → 22/04 ↩ On Progress NTI (revisi) → 25/04 Done</code>
+    </div>
+  </div>
+
+  <div class="section-label">Detail Tiket &amp; Solusi</div>
+  <div class="ticket-list">
+
+    <!-- TSA-001 -->
+    <div class="ticket-card" id="tc001">
+      <div class="ticket-header" onclick="toggleTicket('tc001')">
+        <span class="ticket-id">TSA-001</span>
+        <span class="ticket-title">Field required 'Industry' tidak muncul di form Master Data Partner/Kontak</span>
+        <div class="ticket-meta">
+          <span class="pill pill-done">Done</span>
+          <span class="prio prio-high">High</span>
+          <span class="pill pill-gray">Technical</span>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-body-inner">
+          <!-- Stage stepper -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:4px">
+            <span class="stg stg-done">Request</span><span class="stg-arr">→</span>
+            <span class="stg stg-done">On Progress NTI</span><span class="stg-arr">→</span>
+            <span class="stg stg-skip">Ready Execute DSN</span><span class="stg-arr">→</span>
+            <span class="stg stg-skip">On Progress DSN</span><span class="stg-arr">→</span>
+            <span class="stg stg-skip">Ready to Test</span><span class="stg-arr">→</span>
+            <span class="stg stg-active">Done</span>
+          </div>
+          <div class="info-grid">
+            <div class="info-cell"><div class="info-key">Dibuat</div><div class="info-val">15/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">On Progress NTI</div><div class="info-val">15/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">Done</div><div class="info-val">15/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">PIC Requester</div><div class="info-val">Satria Nusa</div></div>
+            <div class="info-cell"><div class="info-key">SLA Target</div><div class="info-val">7 hari</div></div>
+            <div class="info-cell"><div class="info-key">SLA Aktual</div><div class="info-val">1 hari</div></div>
+            <div class="info-cell"><div class="info-key">Variance</div><div class="info-val"><span class="var-chip var-ok">-6 hari</span></div></div>
+            <div class="info-cell"><div class="info-key">Perusahaan</div><div class="info-val">DSN Group (semua)</div></div>
+          </div>
+          <!-- Status Log -->
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:var(--r8);padding:.7rem .9rem;margin-bottom:.75rem;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.9">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:.35rem;font-family:var(--font);text-transform:uppercase;letter-spacing:.07em">Status Log</div>
+            <span style="color:var(--t3)">15/04</span> <span class="pill pill-request" style="font-size:9.5px;padding:1px 5px">Request</span>
+            → <span style="color:var(--t3)">15/04</span> <span class="pill pill-nti" style="font-size:9.5px;padding:1px 5px">On Progress NTI</span>
+            → <span style="color:var(--t3)">15/04</span> <span class="pill pill-done" style="font-size:9.5px;padding:1px 5px">Done</span>
+          </div>
+          <div class="solution-box">
+            <div class="solution-box-label">Detail &amp; Solusi</div>
+            <p>Pada form <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">res.partner</code>, field 'Industry' bersifat required di database namun tidak di-render di view, menyebabkan Save gagal di semua perusahaan DSN Group. Field berhasil ditambahkan kembali ke view form — save kembali normal.</p>
+          </div>
+          <div class="next-box">
+            <div class="next-box-label">Next Action</div>
+            <p>CR sudah disiapkan, menunggu tanda tangan klien DSN.</p>
+          </div>
+          <div class="sla-row">
+            <span class="sla-label">SLA Progress</span>
+            <div class="sla-track"><div class="sla-fill" style="width:14%;background:var(--teal)"></div></div>
+            <span class="sla-val" style="color:var(--teal)">1/7 hari — 6 hari lebih cepat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TSA-002 -->
+    <div class="ticket-card" id="tc002">
+      <div class="ticket-header" onclick="toggleTicket('tc002')">
+        <span class="ticket-id">TSA-002</span>
+        <span class="ticket-title">SMTP server DSN merestrict email dari domain selain @dsngroup.co.id</span>
+        <div class="ticket-meta">
+          <span class="pill pill-done">Done</span>
+          <span class="prio prio-high">High</span>
+          <span class="pill pill-gray">Technical</span>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-body-inner">
+          <!-- Stage stepper -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:4px">
+            <span class="stg stg-done">Request</span><span class="stg-arr">→</span><span class="stg stg-done">On Progress NTI</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready Execute DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">On Progress DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready to Test</span><span class="stg-arr">→</span><span class="stg stg-active">Done</span>
+          </div>
+          <!-- Status Log -->
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:var(--r8);padding:.7rem .9rem;margin-bottom:.75rem;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.9">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:.35rem;font-family:var(--font);text-transform:uppercase;letter-spacing:.07em">Status Log</div>
+            <span style="color:var(--t3)">20/04</span> <span class="pill pill-request" style="font-size:9.5px;padding:1px 5px">Request</span> → <span style="color:var(--t3)">20/04</span> <span class="pill pill-nti" style="font-size:9.5px;padding:1px 5px">On Progress NTI</span> → <span style="color:var(--t3)">24/04</span> <span class="pill pill-done" style="font-size:9.5px;padding:1px 5px">Done</span>
+          </div>
+          <div class="info-grid">
+            <div class="info-cell"><div class="info-key">Dibuat</div><div class="info-val">20/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">Eksekusi NTI</div><div class="info-val">20/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">Done</div><div class="info-val">24/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">PIC Requester</div><div class="info-val">Tim DSN (Koordinasi)</div></div>
+            <div class="info-cell"><div class="info-key">SLA Target</div><div class="info-val">5 hari</div></div>
+            <div class="info-cell"><div class="info-key">SLA Aktual</div><div class="info-val">4 hari</div></div>
+            <div class="info-cell"><div class="info-key">Variance</div><div class="info-val"><span class="var-chip var-ok">-1 hari</span></div></div>
+          </div>
+          <div class="solution-box">
+            <div class="solution-box-label">Detail &amp; Solusi</div>
+            <p>Email notifikasi Odoo (approval, reminder, dll) yang dikirim dengan 'mail from' selain <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">@dsngroup.co.id</code> langsung ditolak/bounce oleh SMTP server. Konfigurasi SMTP server diupdate agar menerima outgoing email dari domain Odoo NTI sebagai relay. Source code Git DSN diberikan ke NTI (user + akses Git). Field 'mail from' di approval purchase sudah dijawab — berasal dari field email di res.users yang terhubung ke partner.</p>
+          </div>
+          <div class="next-box">
+            <div class="next-box-label">Next Action</div>
+            <p>Monitor 48 jam selesai — tidak ada bounce ulang. Tiket dapat di-Closed pada verifikasi berikutnya.</p>
+          </div>
+          <div class="sla-row">
+            <span class="sla-label">SLA Progress</span>
+            <div class="sla-track"><div class="sla-fill" style="width:80%;background:var(--teal)"></div></div>
+            <span class="sla-val" style="color:var(--teal)">4/5 hari — 1 hari lebih cepat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TSA-003 -->
+    <div class="ticket-card" id="tc003">
+      <div class="ticket-header" onclick="toggleTicket('tc003')">
+        <span class="ticket-id">TSA-003</span>
+        <span class="ticket-title">Jurnal alokasi otomatis tidak terbentuk sejak Januari 2026</span>
+        <div class="ticket-meta">
+          <span class="pill pill-nti">On Progress NTI</span>
+          <span class="prio prio-high">High</span>
+          <span class="pill pill-purple">Functional</span>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-body-inner">
+          <!-- Stage stepper -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:4px">
+            <span class="stg stg-done">Request</span><span class="stg-arr">→</span><span class="stg stg-active">On Progress NTI</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready Execute DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">On Progress DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready to Test</span><span class="stg-arr">→</span><span class="stg stg-skip">Done</span>
+          </div>
+          <!-- Status Log -->
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:var(--r8);padding:.7rem .9rem;margin-bottom:.75rem;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.9">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:.35rem;font-family:var(--font);text-transform:uppercase;letter-spacing:.07em">Status Log</div>
+            <span style="color:var(--t3)">15/04</span> <span class="pill pill-request" style="font-size:9.5px;padding:1px 5px">Request</span> → <span style="color:var(--t3)">15/04</span> <span class="pill pill-nti" style="font-size:9.5px;padding:1px 5px">On Progress NTI</span> <span style="color:var(--t3);font-size:10px">(berlangsung)</span>
+          </div>
+          <div class="info-grid">
+            <div class="info-cell"><div class="info-key">Dibuat</div><div class="info-val">15/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">Eksekusi NTI</div><div class="info-val">15/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">ETA Target</div><div class="info-val">22/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">PIC Requester</div><div class="info-val">Indra Novitasari</div></div>
+            <div class="info-cell"><div class="info-key">SLA Target</div><div class="info-val">10 hari</div></div>
+            <div class="info-cell"><div class="info-key">SLA Aktual</div><div class="info-val" style="color:var(--sky)">Berlangsung</div></div>
+            <div class="info-cell"><div class="info-key">Variance</div><div class="info-val"><span class="var-chip var-na">TBD</span></div></div>
+            
+          </div>
+          <div class="solution-box">
+            <div class="solution-box-label">Analisis &amp; Langkah Saat Ini</div>
+            <p>Sejak awal 2026, jurnal yang seharusnya terbentuk otomatis (alokasi cost, debet/kredit dari scheduled action) tidak lagi berjalan — tahun 2025 masih normal. Juga terkait temuan di Yayasan DSNU (Palm Oil): Jurnal Alokasi Cost Debet 23920000 OCL tidak terbentuk sejak Jan 2026. Kemungkinan ada di konfigurasi scheduled action / cron <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">ir.cron</code> di level aplikasi, bukan source code custom. Estimasi: 3 hari dev + 2 hari UAT.</p>
+          </div>
+          <div class="next-box">
+            <div class="next-box-label">Next Action</div>
+            <p>Cek cron <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">Auto-post Journal Entries</code> di Accounting → Settings → Scheduled Actions. Pastikan status tidak disabled atau permission-nya tidak berubah setelah upgrade Odoo.</p>
+          </div>
+          <div class="sla-row">
+            <span class="sla-label">SLA Progress</span>
+            <div class="sla-track"><div class="sla-fill" style="width:55%;background:var(--sky)"></div></div>
+            <span class="sla-val" style="color:var(--sky)">~5–6/10 hari (estimasi)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TSA-004 -->
+    <div class="ticket-card" id="tc004">
+      <div class="ticket-header" onclick="toggleTicket('tc004')">
+        <span class="ticket-id">TSA-004</span>
+        <span class="ticket-title">RPC Error saat Approval Retur di Kanban — datetime concat bug</span>
+        <div class="ticket-meta">
+          <span class="pill pill-nti">On Progress NTI</span>
+          <span class="prio prio-high">High</span>
+          <span class="pill pill-gray">Technical</span>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-body-inner">
+          <!-- Stage stepper -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:4px">
+            <span class="stg stg-done">Request</span><span class="stg-arr">→</span><span class="stg stg-active">On Progress NTI</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready Execute DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">On Progress DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready to Test</span><span class="stg-arr">→</span><span class="stg stg-skip">Done</span>
+          </div>
+          <!-- Status Log -->
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:var(--r8);padding:.7rem .9rem;margin-bottom:.75rem;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.9">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:.35rem;font-family:var(--font);text-transform:uppercase;letter-spacing:.07em">Status Log</div>
+            <span style="color:var(--t3)">30/04</span> <span class="pill pill-request" style="font-size:9.5px;padding:1px 5px">Request</span> → <span style="color:var(--t3)">30/04</span> <span class="pill pill-nti" style="font-size:9.5px;padding:1px 5px">On Progress NTI</span> <span style="color:var(--t3);font-size:10px">(berlangsung — analisis datetime.combine)</span>
+          </div>
+          <div class="info-grid">
+            <div class="info-cell"><div class="info-key">Dibuat</div><div class="info-val">30/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">Perusahaan</div><div class="info-val">PT Panyindangan</div></div>
+            <div class="info-cell"><div class="info-key">ETA Target</div><div class="info-val">07/05/2026</div></div>
+            <div class="info-cell"><div class="info-key">PIC Requester</div><div class="info-val">Anggi Setyawan</div></div>
+            <div class="info-cell"><div class="info-key">SLA Target</div><div class="info-val">7 hari</div></div>
+            <div class="info-cell"><div class="info-key">SLA Aktual</div><div class="info-val" style="color:var(--sky)">Berlangsung</div></div>
+            <div class="info-cell"><div class="info-key">File Terkait</div><div class="info-val" style="font-family:var(--mono);font-size:11px">stock_picking.py:273</div></div>
+            <div class="info-cell"><div class="info-key">Module</div><div class="info-val" style="font-family:var(--mono);font-size:11px">x_dynamic_approval</div></div>
+          </div>
+          <div class="solution-box">
+            <div class="solution-box-label">Root Cause &amp; Solusi</div>
+            <p>Baris 271–275 di <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">stock_picking.py</code> melakukan string concatenation <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">str(accounting_date_po) + ' ' + str(date_approved.time())</code> yang menghasilkan microsecond di akhir string — tidak kompatibel dengan DATETIME_FORMAT Odoo. Fix: ganti dengan <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">datetime.combine(self.accounting_date_po, date_approved.time())</code>.</p>
+          </div>
+          <div class="next-box">
+            <div class="next-box-label">Next Action</div>
+            <p>Deploy fix ke staging DSN, test alur approval retur secara penuh, lalu push ke production.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TSA-005 -->
+    <div class="ticket-card" id="tc005">
+      <div class="ticket-header" onclick="toggleTicket('tc005')">
+        <span class="ticket-id">TSA-005</span>
+        <span class="ticket-title">Nomor Vendor Bill salah — prefix DCV+I, seharusnya BILL (sequence_for_journal)</span>
+        <div class="ticket-meta">
+          <span class="pill pill-done">Done</span>
+          <span class="prio prio-medium">Medium</span>
+          <span class="pill pill-purple">Functional</span>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-body-inner">
+          <!-- Stage stepper -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:4px">
+            <span class="stg stg-done">Request</span><span class="stg-arr">→</span><span class="stg stg-done">On Progress NTI</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready Execute DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">On Progress DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready to Test</span><span class="stg-arr">→</span><span class="stg stg-active">Done</span>
+          </div>
+          <!-- Status Log -->
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:var(--r8);padding:.7rem .9rem;margin-bottom:.75rem;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.9">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:.35rem;font-family:var(--font);text-transform:uppercase;letter-spacing:.07em">Status Log</div>
+            <span style="color:var(--t3)">30/04</span> <span class="pill pill-request" style="font-size:9.5px;padding:1px 5px">Request</span> → <span style="color:var(--t3)">30/04</span> <span class="pill pill-nti" style="font-size:9.5px;padding:1px 5px">On Progress NTI</span> → <span style="color:var(--t3)">30/04</span> <span class="pill pill-done" style="font-size:9.5px;padding:1px 5px">Done</span>
+          </div>
+          <div class="info-grid">
+            <div class="info-cell"><div class="info-key">Dibuat</div><div class="info-val">30/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">Done</div><div class="info-val">30/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">Perusahaan</div><div class="info-val">PT DPP (Corn)</div></div>
+            <div class="info-cell"><div class="info-key">PIC Requester</div><div class="info-val">Lulu (Adm-Prod-Corn)</div></div>
+            <div class="info-cell"><div class="info-key">SLA Target</div><div class="info-val">7 hari</div></div>
+            <div class="info-cell"><div class="info-key">SLA Aktual</div><div class="info-val">1 hari</div></div>
+            <div class="info-cell"><div class="info-key">Variance</div><div class="info-val"><span class="var-chip var-ok">-6 hari</span></div></div>
+            <div class="info-cell"><div class="info-key">Module</div><div class="info-val" style="font-family:var(--mono);font-size:11px">sequence_for_journal</div></div>
+          </div>
+          <div class="solution-box">
+            <div class="solution-box-label">Solusi</div>
+            <p><strong style="font-weight:600">Functional:</strong> Accounting → Settings → Journals → Vendor Bill → tab Sequence → ubah Prefix &amp; Suffix. Untuk transaksi lama: export/import field nama via Odoo built-in (checklist "I want to update data").<br><br><strong style="font-weight:600">Technical:</strong> Module <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">sequence_for_journal</code>, file <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">models/account_move.py</code> function <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">_get_starting_sequence</code> line 29 — prefix/suffix diambil dari master sequence yang berelasi dengan journal.</p>
+          </div>
+          <div class="next-box">
+            <div class="next-box-label">Next Action</div>
+            <p>Konfirmasi ke Lulu apakah transaksi lama perlu diupdate prefix-nya juga.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TSA-006 -->
+    <div class="ticket-card" id="tc006">
+      <div class="ticket-header" onclick="toggleTicket('tc006')">
+        <span class="ticket-id">TSA-006</span>
+        <span class="ticket-title">Error vendor billing dari multiple PO sekaligus — ValueError Expected singleton</span>
+        <div class="ticket-meta">
+          <span class="pill pill-done">Done</span>
+          <span class="prio prio-high">High</span>
+          <span class="pill pill-gray">Technical</span>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-body-inner">
+          <!-- Stage stepper -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:4px">
+            <span class="stg stg-done">Request</span><span class="stg-arr">→</span><span class="stg stg-done">On Progress NTI</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready Execute DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">On Progress DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready to Test</span><span class="stg-arr">→</span><span class="stg stg-active">Done</span>
+          </div>
+          <!-- Status Log -->
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:var(--r8);padding:.7rem .9rem;margin-bottom:.75rem;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.9">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:.35rem;font-family:var(--font);text-transform:uppercase;letter-spacing:.07em">Status Log</div>
+            <span style="color:var(--t3)">30/04</span> <span class="pill pill-request" style="font-size:9.5px;padding:1px 5px">Request</span> → <span style="color:var(--t3)">30/04</span> <span class="pill pill-nti" style="font-size:9.5px;padding:1px 5px">On Progress NTI</span> → <span style="color:var(--t3)">30/04</span> <span class="pill pill-done" style="font-size:9.5px;padding:1px 5px">Done</span>
+          </div>
+          <div class="info-grid">
+            <div class="info-cell"><div class="info-key">Dibuat</div><div class="info-val">30/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">Done</div><div class="info-val">30/04/2026</div></div>
+            <div class="info-cell"><div class="info-key">Perusahaan</div><div class="info-val">PT DPP (Corn)</div></div>
+            <div class="info-cell"><div class="info-key">PIC Requester</div><div class="info-val">Lulu (Adm-Prod-Corn)</div></div>
+            <div class="info-cell"><div class="info-key">SLA Target</div><div class="info-val">3 hari</div></div>
+            <div class="info-cell"><div class="info-key">SLA Aktual</div><div class="info-val">1 hari</div></div>
+            <div class="info-cell"><div class="info-key">Variance</div><div class="info-val"><span class="var-chip var-ok">-2 hari</span></div></div>
+            <div class="info-cell"><div class="info-key">Module</div><div class="info-val" style="font-family:var(--mono);font-size:11px">x_emi_purchase_mgmt</div></div>
+          </div>
+          <div class="solution-box">
+            <div class="solution-box-label">Root Cause &amp; Fix</div>
+            <p>File <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">models/purchase_mgmt.py</code> baris 66 mengakses langsung <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">self.date_planned</code> pada recordset yang berisi lebih dari 1 record (multi-PO). Fix: ganti dengan <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">max(self.mapped('date_planned'))</code>. Jangan loop di level <code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px">super()</code> — akan merusak grouping standar Odoo (PO dari vendor+currency+company sama = 1 bill).</p>
+          </div>
+          <div class="next-box">
+            <div class="next-box-label">Next Action</div>
+            <p>Deploy dan test dengan 2+ PO dari vendor yang sama. Verifikasi invoice_date sesuai tanggal terlama dari PO yang digabung.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TSA-007 -->
+    <div class="ticket-card" id="tc007">
+      <div class="ticket-header" onclick="toggleTicket('tc007')">
+        <span class="ticket-id">TSA-007</span>
+        <span class="ticket-title">Error register payment petty cash — journal payment tidak bisa diposting</span>
+        <div class="ticket-meta">
+          <span class="pill pill-done">Done</span>
+          <span class="prio prio-medium">Medium</span>
+          <span class="pill pill-gray">Technical</span>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-body-inner">
+          <!-- Stage stepper -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:4px">
+            <span class="stg stg-done">Request</span><span class="stg-arr">→</span><span class="stg stg-done">On Progress NTI</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready Execute DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">On Progress DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready to Test</span><span class="stg-arr">→</span><span class="stg stg-active">Done</span>
+          </div>
+          <!-- Status Log -->
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:var(--r8);padding:.7rem .9rem;margin-bottom:.75rem;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.9">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:.35rem;font-family:var(--font);text-transform:uppercase;letter-spacing:.07em">Status Log</div>
+            <span style="color:var(--t3)">08/05</span> <span class="pill pill-request" style="font-size:9.5px;padding:1px 5px">Request</span> → <span style="color:var(--t3)">08/05</span> <span class="pill pill-nti" style="font-size:9.5px;padding:1px 5px">On Progress NTI</span> → <span style="color:var(--t3)">08/05</span> <span class="pill pill-done" style="font-size:9.5px;padding:1px 5px">Done</span>
+          </div>
+          <div class="info-grid">
+            <div class="info-cell"><div class="info-key">Dibuat</div><div class="info-val">08/05/2026</div></div>
+            <div class="info-cell"><div class="info-key">Done</div><div class="info-val">08/05/2026</div></div>
+            <div class="info-cell"><div class="info-key">Perusahaan</div><div class="info-val">PT DPP + PT PUL</div></div>
+            <div class="info-cell"><div class="info-key">PIC Requester</div><div class="info-val">Indah Nufarah / Lisa</div></div>
+          </div>
+          <div class="solution-box">
+            <div class="solution-box-label">Solusi</div>
+            <p>Field 'Journal' pada form Register Payment tidak diisi atau kosong — menyebabkan validasi gagal saat posting. User diarahkan untuk memilih journal yang sesuai dengan petty cash sebelum klik Register Payment.</p>
+          </div>
+          <div class="next-box">
+            <div class="next-box-label">Next Action</div>
+            <p>Edukasi user (Indah Nufarah &amp; Lisa) agar selalu memilih journal sebelum register payment. Pertimbangkan default journal di konfigurasi petty cash.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TSA-008 -->
+    <div class="ticket-card" id="tc008">
+      <div class="ticket-header" onclick="toggleTicket('tc008')">
+        <span class="ticket-id">TSA-008</span>
+        <span class="ticket-title">Contra account Ha Management tidak terbaca — GL 51311402 &amp; 52112204</span>
+        <div class="ticket-meta">
+          <span class="pill pill-request">Request</span>
+          <span class="prio prio-high">High</span>
+          <span class="pill pill-purple">Functional</span>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-body-inner">
+          <!-- Stage stepper -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:4px">
+            <span class="stg stg-active">Request</span><span class="stg-arr">→</span><span class="stg stg-skip">On Progress NTI</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready Execute DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">On Progress DSN</span><span class="stg-arr">→</span><span class="stg stg-skip">Ready to Test</span><span class="stg-arr">→</span><span class="stg stg-skip">Done</span>
+          </div>
+          <!-- Status Log -->
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:var(--r8);padding:.7rem .9rem;margin-bottom:.75rem;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.9">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:.35rem;font-family:var(--font);text-transform:uppercase;letter-spacing:.07em">Status Log</div>
+            <span style="color:var(--t3)">07/05</span> <span class="pill pill-request" style="font-size:9.5px;padding:1px 5px">Request</span> <span style="color:var(--t3);font-size:10px">(baru masuk — sedang dianalisis)</span>
+          </div>
+          <div class="info-grid">
+            <div class="info-cell"><div class="info-key">Dibuat</div><div class="info-val">07/05/2026</div></div>
+            <div class="info-cell"><div class="info-key">Eksekusi NTI</div><div class="info-val">07/05/2026</div></div>
+            <div class="info-cell"><div class="info-key">ETA Target</div><div class="info-val">14/05/2026</div></div>
+            <div class="info-cell"><div class="info-key">PIC Requester</div><div class="info-val">Andry Susanto</div></div>
+            <div class="info-cell"><div class="info-key">Perusahaan</div><div class="info-val">PT PUL (Palm Oil)</div></div>
+            <div class="info-cell"><div class="info-key">SLA Target</div><div class="info-val">7 hari</div></div>
+            <div class="info-cell"><div class="info-key">GL Account 1</div><div class="info-val" style="font-family:var(--mono);font-size:11px">51311402 — GS WAREHOUSING</div></div>
+            <div class="info-cell"><div class="info-key">GL Account 2</div><div class="info-val" style="font-family:var(--mono);font-size:11px">52112204 — GS HO TAXES LIC</div></div>
+          </div>
+          <div class="solution-box">
+            <div class="solution-box-label">Analisis Awal</div>
+            <p>GL Account 51311402 (GS WAREHOUSING) dan 52112204 (GS HO - TAXES LICENSE) tidak terbaca saat proses alokasi di modul Ha Management. Kemungkinan: GL account belum dikonfigurasi sebagai contra account yang valid di setup Ha Management, atau ada filter account type yang terlalu ketat.</p>
+          </div>
+          <div class="next-box">
+            <div class="next-box-label">Next Action</div>
+            <p>Cek konfigurasi account group dan allocation rule di modul Ha Management. Verifikasi apakah account type dari GL tersebut sesuai dengan filter yang digunakan modul.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+<!-- ══════════════ WEEKLY LOG ══════════════ -->
+<div id="tab-weekly" class="page">
+<div class="main">
+  <div class="section-label">History Kondisi per Minggu</div>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot done"></div>
+      <div class="tl-week">Week 1</div>
+      <div class="tl-period">15 Apr – 17 Apr 2026</div>
+      <div class="tl-card">
+        <strong style="color:var(--t1)">Meeting perdana &amp; intake 3 tiket sekaligus</strong>
+        <ul style="margin-top:.5rem">
+          <li>Meeting pertama dengan pihak DSN Group</li>
+          <li>DSN memberikan 3 issue — TSA-001 langsung ditangani &amp; selesai di hari yang sama</li>
+          <li>TSA-002 (SMTP) &amp; TSA-003 (jurnal otomatis) dicatat, mulai dianalisis</li>
+        </ul>
+        <div class="tl-chips">
+          <span class="pill pill-teal">TSA-001 Opened &amp; Resolved</span>
+          <span class="pill pill-sky">TSA-002 Opened</span>
+          <span class="pill pill-sky">TSA-003 Opened</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot done"></div>
+      <div class="tl-week">Week 2</div>
+      <div class="tl-period">20 Apr – 24 Apr 2026</div>
+      <div class="tl-card">
+        <strong style="color:var(--t1)">Onboarding sistem &amp; penyelesaian SMTP</strong>
+        <ul style="margin-top:.5rem">
+          <li>Bergabung ke group koordinasi (sempat terlambat — invite masuk spam)</li>
+          <li>TSA-002 resolved: SMTP dikonfigurasi ulang, domain relay NTI diizinkan</li>
+          <li>Source code Git DSN diberikan ke tim NTI</li>
+          <li>Pertanyaan 'mail from' approval purchase dijawab dari code review</li>
+          <li>Analisis awal TSA-003: dicurigai ada di konfigurasi ir.cron</li>
+        </ul>
+        <div class="tl-chips">
+          <span class="pill pill-teal">TSA-002 Resolved</span>
+          <span class="pill pill-sky">TSA-003 Analisis</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot done"></div>
+      <div class="tl-week">Week 3</div>
+      <div class="tl-period">27 Apr – 1 Mei 2026</div>
+      <div class="tl-card">
+        <strong style="color:var(--t1)">KOM Internal &amp; 3 tiket baru masuk dari Log Issue</strong>
+        <ul style="margin-top:.5rem">
+          <li>KOM Internal dilaksanakan — review status semua tiket</li>
+          <li>Fixing issue dari spreadsheet DSN; CR TSA-001 disiapkan</li>
+          <li>TSA-004 masuk: Error approval retur Kanban (datetime concat bug di x_dynamic_approval)</li>
+          <li>TSA-005 masuk &amp; resolved: Prefix/suffix Vendor Bill salah (sequence_for_journal)</li>
+          <li>TSA-006 masuk &amp; resolved: Error vendor billing multi-PO (Singleton ValueError)</li>
+          <li>1 Mei — Libur Nasional (Hari Buruh)</li>
+        </ul>
+        <div class="tl-chips">
+          <span class="pill pill-teal">TSA-005 Resolved</span>
+          <span class="pill pill-teal">TSA-006 Resolved</span>
+          <span class="pill pill-sky">TSA-004 On-Going</span>
+          <span class="pill pill-gold">CR TSA-001 Pending TTD</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot now"></div>
+      <div class="tl-week now-week">Week 4 — Current</div>
+      <div class="tl-period">4 Mei – 8 Mei 2026</div>
+      <div class="tl-card now-card">
+        <strong style="color:var(--gold)">2 tiket baru, follow-up aktif</strong>
+        <ul style="margin-top:.5rem">
+          <li>TSA-007 masuk &amp; resolved: Error register payment petty cash (field journal kosong)</li>
+          <li>TSA-008 masuk: Contra account Ha Management tidak terbaca — PT PUL Palm Oil</li>
+          <li>Follow-up TSA-003: cek cron Auto-post Journal Entries di Odoo Accounting Settings</li>
+          <li>Follow-up TSA-004: deploy fix datetime.combine ke staging DSN</li>
+        </ul>
+        <div class="tl-chips">
+          <span class="pill pill-teal">TSA-007 Resolved</span>
+          <span class="pill pill-red">TSA-008 Open</span>
+          <span class="pill pill-sky">TSA-003 In Progress</span>
+          <span class="pill pill-sky">TSA-004 On-Going</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot future"></div>
+      <div class="tl-week" style="color:var(--t3)">Week 5 — Planned</div>
+      <div class="tl-period">11 Mei – 15 Mei 2026</div>
+      <div class="tl-card future-card">
+        <ul>
+          <li>Finalisasi TSA-003: UAT jurnal otomatis 2026</li>
+          <li>Finalisasi TSA-004: push fix ke production setelah staging OK</li>
+          <li>Penyelesaian TSA-008: Ha Management contra account</li>
+          <li>Konfirmasi &amp; penandatanganan CR TSA-001</li>
+          <li>Verifikasi Closed TSA-002</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Weekly summary table -->
+  <div class="section-label" style="margin-top:2rem">Ringkasan per Minggu</div>
+  <div class="table-wrap2">
+    <table class="sla-full-table">
+      <thead><tr><th>Minggu</th><th>Periode</th><th>Tiket Masuk</th><th>Tiket Resolved</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mgg 1</strong></td><td style="color:var(--t3)">15–17 Apr 2026</td><td style="color:var(--teal)">3</td><td style="color:var(--teal)">1</td><td><span class="pill pill-teal">Baik</span></td></tr>
+        <tr><td><strong>Mgg 2</strong></td><td style="color:var(--t3)">20–24 Apr 2026</td><td style="color:var(--t3)">0</td><td style="color:var(--teal)">1</td><td><span class="pill pill-teal">Baik</span></td></tr>
+        <tr><td><strong>Mgg 3</strong></td><td style="color:var(--t3)">27 Apr – 1 Mei 2026</td><td style="color:var(--teal)">3</td><td style="color:var(--teal)">2</td><td><span class="pill pill-sky">Berjalan</span></td></tr>
+        <tr><td><strong>Mgg 4</strong></td><td style="color:var(--t3)">4–8 Mei 2026</td><td style="color:var(--teal)">2</td><td style="color:var(--teal)">1</td><td><span class="pill pill-sky">Berjalan</span></td></tr>
+        <tr><td style="color:var(--t3)">Mgg 5</td><td style="color:var(--t3)">11–15 Mei 2026</td><td style="color:var(--t3)">—</td><td style="color:var(--t3)">—</td><td><span class="pill pill-gray">Planned</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+
+<!-- ══════════════ TIMESHEET ══════════════ -->
+<div id="tab-timesheet" class="page">
+<div class="main">
+
+  <div class="warn-banner">
+    <span class="warn-dot" style="background:var(--sky)"></span>
+    <span style="color:var(--sky)">Data timesheet ini adalah <strong>estimasi/dummy</strong> — jam aktual belum dihitung. Update kolom G di file Excel untuk aktual.</span>
+  </div>
+
+  <!-- Week 1 -->
+  <div class="ts-week-header">
+    <span style="color:var(--teal)">Week 1</span>
+    <span style="color:var(--t3)">15–17 Apr 2026</span>
+    <span style="color:var(--gold)">12.5 jam (est.)</span>
+  </div>
+  <table class="ts-table">
+    <thead><tr><th>Tanggal</th><th>Aktivitas</th><th>Tipe</th><th>Tiket</th><th style="text-align:right">Jam (Dummy)</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--t3)">Sel, 15 Apr</td><td>Meeting pertama dengan DSN, intake 3 issue</td><td><span class="type-chip type-meeting">Meeting</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-001,002,003</td><td style="text-align:right">2.0</td></tr>
+      <tr><td style="color:var(--t3)">Sel, 15 Apr</td><td>Analisis &amp; fix field Industry di form master kontak</td><td><span class="type-chip type-dev">Dev</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-001</td><td style="text-align:right">3.0</td></tr>
+      <tr><td style="color:var(--t3)">Sel, 15 Apr</td><td>Dokumentasi tiket &amp; update spreadsheet tracker</td><td><span class="type-chip type-ba">BA</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">All</td><td style="text-align:right">1.0</td></tr>
+      <tr><td style="color:var(--t3)">Rab, 16 Apr</td><td>Analisis CSV error encoding TSA-002</td><td><span class="type-chip type-dev">Dev</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-002</td><td style="text-align:right">3.0</td></tr>
+      <tr><td style="color:var(--t3)">Rab, 16 Apr</td><td>Review scope kontrak &amp; budget impact TSA-001</td><td><span class="type-chip type-ba">BA</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-001</td><td style="text-align:right">1.5</td></tr>
+      <tr><td style="color:var(--t3)">Kam, 17 Apr</td><td>Persiapan CR document TSA-001</td><td><span class="type-chip type-ba">BA</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-001</td><td style="text-align:right">2.0</td></tr>
+    </tbody>
+    <tfoot><tr><td colspan="4">Subtotal Week 1</td><td style="text-align:right">12.5 jam</td></tr></tfoot>
+  </table>
+
+  <!-- Week 2 -->
+  <div class="ts-week-header">
+    <span style="color:var(--teal)">Week 2</span>
+    <span style="color:var(--t3)">20–24 Apr 2026</span>
+    <span style="color:var(--gold)">16.5 jam (est.)</span>
+  </div>
+  <table class="ts-table">
+    <thead><tr><th>Tanggal</th><th>Aktivitas</th><th>Tipe</th><th>Tiket</th><th style="text-align:right">Jam (Dummy)</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--t3)">Sen, 20 Apr</td><td>Onboarding group koordinasi DSN &amp; NTI</td><td><span class="type-chip type-meeting">Meeting</span></td><td style="color:var(--t3)">—</td><td style="text-align:right">1.0</td></tr>
+      <tr><td style="color:var(--t3)">Sen, 20 Apr</td><td>Cek &amp; fix issue SMTP server DSN</td><td><span class="type-chip type-dev">Dev</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-002</td><td style="text-align:right">3.0</td></tr>
+      <tr><td style="color:var(--t3)">Sel, 21 Apr</td><td>Review source code Git DSN — email from approval purchase</td><td><span class="type-chip type-dev">Dev</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-002</td><td style="text-align:right">2.5</td></tr>
+      <tr><td style="color:var(--t3)">Sel, 21 Apr</td><td>Update script konversi UTF-8/ANSI</td><td><span class="type-chip type-dev">Dev</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-002</td><td style="text-align:right">3.0</td></tr>
+      <tr><td style="color:var(--t3)">Rab, 22 Apr</td><td>Deploy fix ke UAT &amp; monitoring TSA-002</td><td><span class="type-chip type-qa">QA</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-002</td><td style="text-align:right">2.0</td></tr>
+      <tr><td style="color:var(--t3)">Kam, 23 Apr</td><td>Analisis awal TSA-003: cek konfigurasi scheduler/cron</td><td><span class="type-chip type-dev">Dev</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-003</td><td style="text-align:right">3.0</td></tr>
+      <tr><td style="color:var(--t3)">Jum, 24 Apr</td><td>Update tracker DSN &amp; laporan mingguan internal</td><td><span class="type-chip type-ba">BA</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">All</td><td style="text-align:right">2.0</td></tr>
+    </tbody>
+    <tfoot><tr><td colspan="4">Subtotal Week 2</td><td style="text-align:right">16.5 jam</td></tr></tfoot>
+  </table>
+
+  <!-- Week 3 -->
+  <div class="ts-week-header">
+    <span style="color:var(--teal)">Week 3</span>
+    <span style="color:var(--t3)">27 Apr – 1 Mei 2026</span>
+    <span style="color:var(--gold)">13.0 jam (est.)</span>
+  </div>
+  <table class="ts-table">
+    <thead><tr><th>Tanggal</th><th>Aktivitas</th><th>Tipe</th><th>Tiket</th><th style="text-align:right">Jam (Dummy)</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--t3)">Sen, 27 Apr</td><td>KOM Internal — review status semua tiket</td><td><span class="type-chip type-meeting">Meeting</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">All</td><td style="text-align:right">2.0</td></tr>
+      <tr><td style="color:var(--t3)">Sen, 27 Apr</td><td>Fixing issue spreadsheet DSN (batch 1)</td><td><span class="type-chip type-dev">Dev</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-003</td><td style="text-align:right">3.0</td></tr>
+      <tr><td style="color:var(--t3)">Sel, 28 Apr</td><td>Fixing issue spreadsheet DSN (batch 2) + analisis TSA-005/006</td><td><span class="type-chip type-dev">Dev</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-005, 006</td><td style="text-align:right">3.5</td></tr>
+      <tr><td style="color:var(--t3)">Rab, 29 Apr</td><td>Testing &amp; validasi fix jurnal automation + multi-PO billing</td><td><span class="type-chip type-qa">QA</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-003, 006</td><td style="text-align:right">2.5</td></tr>
+      <tr><td style="color:var(--t3)">Kam, 30 Apr</td><td>Update dokumentasi, CR TSA-001, analisis TSA-004</td><td><span class="type-chip type-ba">BA</span></td><td style="font-family:var(--mono);font-size:11px;color:var(--teal)">TSA-001, 004</td><td style="text-align:right">2.0</td></tr>
+      <tr><td style="color:var(--t3)">Jum, 1 Mei</td><td>Libur Nasional — Hari Buruh</td><td><span class="type-chip type-off">Off</span></td><td style="color:var(--t3)">—</td><td style="text-align:right">0</td></tr>
+    </tbody>
+    <tfoot><tr><td colspan="4">Subtotal Week 3</td><td style="text-align:right">13.0 jam</td></tr></tfoot>
+  </table>
+
+  <!-- Grand Total -->
+  <div class="ts-grand" style="margin-top:1rem">
+    <div class="ts-grand-cell">
+      <div class="ts-grand-label">Grand Total</div>
+      <div class="ts-grand-val" style="color:var(--teal)">41.5 jam</div>
+    </div>
+    <div class="ts-grand-cell">
+      <div class="ts-grand-label">Development</div>
+      <div class="ts-grand-val" style="color:var(--sky)">26.5 jam</div>
+    </div>
+    <div class="ts-grand-cell">
+      <div class="ts-grand-label">BA / Dokumentasi</div>
+      <div class="ts-grand-val" style="color:var(--teal)">9.5 jam</div>
+    </div>
+    <div class="ts-grand-cell">
+      <div class="ts-grand-label">QA / Testing</div>
+      <div class="ts-grand-val" style="color:var(--red)">4.5 jam</div>
+    </div>
+    <div class="ts-grand-cell">
+      <div class="ts-grand-label">Meeting</div>
+      <div class="ts-grand-val" style="color:var(--gold)">5.0 jam</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+<!-- ══════════════ CONTRACT ══════════════ -->
+<div id="tab-contract" class="page">
+<div class="main">
+
+  <div class="section-label">Informasi Kontrak</div>
+  <div class="contract-grid">
+    <div class="cbox">
+      <div class="cbox-title">Detail Kontrak</div>
+      <div class="cbox-row"><span class="cbox-key">Nama Proyek</span><span class="cbox-val teal">NTI ERP Enhancement — TSA DSN</span></div>
+      <div class="cbox-row"><span class="cbox-key">Client</span><span class="cbox-val">DSN Group</span></div>
+      <div class="cbox-row"><span class="cbox-key">Project Manager</span><span class="cbox-val">Luthfi Achmaddin Nizar</span></div>
+      <div class="cbox-row"><span class="cbox-key">Konsultan Odoo</span><span class="cbox-val">Luthfi Achmaddin Nizar</span></div>
+      <div class="cbox-row"><span class="cbox-key">Tanggal Mulai</span><span class="cbox-val">15 April 2026</span></div>
+      <div class="cbox-row"><span class="cbox-key">Durasi Kontrak</span><span class="cbox-val">14 Minggu</span></div>
+      <div class="cbox-row"><span class="cbox-key">Tanggal Berakhir</span><span class="cbox-val gold">18 Juli 2026</span></div>
+      <div class="cbox-row"><span class="cbox-key">Platform</span><span class="cbox-val" style="color:var(--t3)">Menunggu VPN — belum tersedia</span></div>
+      <div class="cbox-row"><span class="cbox-key">Cakupan Perusahaan</span><span class="cbox-val">PT Panyindangan, PT DPP (Corn), PT PUL (Palm Oil), Yayasan DSNU</span></div>
+    </div>
+    <div class="cbox">
+      <div class="cbox-title">Milestone Kontrak</div>
+      <div class="cbox-row">
+        <span class="cbox-key">Kontrak Mulai</span>
+        <span class="cbox-val teal">15 Apr 2026</span>
+      </div>
+      <div class="cbox-row">
+        <span class="cbox-key">Estimasi BAST</span>
+        <span class="cbox-val sky">11 Jul 2026 <span style="font-size:11px;color:var(--t3)">(1 minggu sebelum akhir)</span></span>
+      </div>
+      <div class="cbox-row">
+        <span class="cbox-key">⚠ Follow-up Kontrak Baru</span>
+        <span class="cbox-val gold" style="font-weight:700">4 Jul 2026 <span style="font-size:11px;color:var(--t3)">(H-14 berakhir)</span></span>
+      </div>
+      <div class="cbox-row">
+        <span class="cbox-key">Kontrak Berakhir</span>
+        <span class="cbox-val red">18 Jul 2026</span>
+      </div>
+      <div style="margin-top:1rem">
+        <div style="font-size:10.5px;color:var(--t3);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">Progress Kontrak</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
+            <div style="width:28%;height:100%;background:linear-gradient(90deg,#10B981,#38BDF8);border-radius:3px"></div>
+          </div>
+          <span style="font-size:12px;font-weight:700;color:var(--teal)">28%</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:4px">
+          <span>Mgg 1</span><span>↑ Mgg 4 (now)</span><span>Mgg 14</span>
+        </div>
+      </div>
+      <div style="margin-top:1rem;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:.7rem .9rem;font-size:11.5px;color:var(--t2);line-height:1.6">
+        Pengajuan perpanjangan atau kontrak baru perlu dimulai <strong style="color:var(--gold)">4 Juli 2026</strong>. BAST ditargetkan selesai sebelum kontrak berakhir, paling lambat <strong style="color:var(--sky)">11 Juli 2026</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">SLA per Prioritas</div>
+  <div class="table-wrap2">
+    <table class="sla-full-table">
+      <thead><tr><th>Prioritas</th><th>SLA Maksimal</th><th>Kriteria</th><th>Tiket Aktual</th><th>Performa</th></tr></thead>
+      <tbody>
+        <tr><td><span class="prio prio-critical">Critical</span></td><td>&lt; 24 jam</td><td style="color:var(--t3)">Dampak operasional mayor</td><td style="color:var(--t3)">—</td><td style="color:var(--t3)">—</td></tr>
+        <tr><td><span class="prio prio-high">High</span></td><td>3–10 hari</td><td style="color:var(--t3)">Dampak signifikan</td><td style="color:var(--t3)">TSA-001, 002, 003, 004, 006, 008</td><td><span class="pill pill-teal">4 selesai tepat/cepat</span> <span class="pill pill-sky">2 berlangsung</span></td></tr>
+        <tr><td><span class="prio prio-medium">Medium</span></td><td>&lt; 7 hari</td><td style="color:var(--t3)">Dampak moderat</td><td style="color:var(--t3)">TSA-005, 007</td><td><span class="pill pill-teal">2/2 selesai cepat</span></td></tr>
+        <tr><td><span class="prio prio-low">Low</span></td><td>&lt; 14 hari</td><td style="color:var(--t3)">Dampak minimal</td><td style="color:var(--t3)">—</td><td style="color:var(--t3)">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-label">Tim Proyek</div>
+  <div class="table-wrap2">
+    <table class="sla-full-table">
+      <thead><tr><th>Nama</th><th>Role</th><th>Tanggung Jawab</th><th>Tim</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:600;color:var(--t1)">Luthfi Achmaddin Nizar</td><td><span class="pill pill-teal">Project Manager</span></td><td style="color:var(--t3)">Koordinasi proyek, pelaporan PMO, eskalasi ke klien</td><td style="color:var(--t3)">NTI</td></tr>
+        <tr><td style="font-weight:600;color:var(--t1)">Luthfi Achmaddin Nizar</td><td><span class="pill pill-sky">Konsultan Odoo</span></td><td style="color:var(--t3)">Analisis kebutuhan, konfigurasi, troubleshooting Odoo ERP DSN Group</td><td style="color:var(--t3)">NTI</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</div>
+
+
+<!-- ── FOOTER ── -->
+<div class="footer">
+  <span>PMO Weekly Report · NTI × DSN Group · Odoo ERP Enhancement</span>
+  <span>Generated 4 Mei 2026 · <strong style="color:var(--t2)">Luthfi Achmaddin Nizar</strong></span>
+  <span style="color:var(--bg4)">Confidential — Internal Use</span>
+</div>
+
+
+<script>
+function gotoTab(el, name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+function toggleTicket(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// ── CHARTS ──
+const TEAL  = '#10B981';
+const SKY   = '#38BDF8';
+const RED   = '#EF4444';
+const GOLD  = '#F59E0B';
+const PURP  = '#A78BFA';
+const DIM   = '#253040';
+const GRAY  = '#506070';
+
+Chart.defaults.color = '#506070';
+Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+Chart.defaults.font.size = 11;
+
+// Status donut
+new Chart(document.getElementById('cStatus'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Resolved','On-Going / In Progress','Open'],
+    datasets: [{
+      data: [5, 2, 1],
+      backgroundColor: [TEAL, SKY, RED],
+      borderColor: '#131920',
+      borderWidth: 3,
+      hoverOffset: 5
+    }]
+  },
+  options: {
+    cutout: '70%',
+    plugins: { legend: { display: false } },
+    responsive: true,
+    maintainAspectRatio: false
+  }
+});
+
+// Kategori donut
+new Chart(document.getElementById('cKat'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Technical','Functional'],
+    datasets: [{
+      data: [5, 3],
+      backgroundColor: [SKY, PURP],
+      borderColor: '#131920',
+      borderWidth: 3,
+      hoverOffset: 5
+    }]
+  },
+  options: {
+    cutout: '70%',
+    plugins: { legend: { display: false } },
+    responsive: true,
+    maintainAspectRatio: false
+  }
+});
+
+// SLA Variance horizontal bar
+new Chart(document.getElementById('cSLA'), {
+  type: 'bar',
+  data: {
+    labels: ['TSA-001','TSA-002','TSA-005','TSA-006','TSA-007'],
+    datasets: [{
+      label: 'Variance (hari)',
+      data: [-6, -1, -6, -2, -2],
+      backgroundColor: [TEAL, TEAL, TEAL, TEAL, TEAL],
+      borderRadius: 4,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: v => v.raw <= 0 ? Math.abs(v.raw) + ' hari lebih cepat' : '+' + v.raw + ' hari overdue'
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(255,255,255,.05)' },
+        ticks: { callback: v => v <= 0 ? Math.abs(v) + 'd faster' : '+' + v }
+      },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// Weekly line
+new Chart(document.getElementById('cWeekly'), {
+  type: 'line',
+  data: {
+    labels: ['Mgg 1\n15–17 Apr', 'Mgg 2\n20–24 Apr', 'Mgg 3\n27 Apr–1 Mei', 'Mgg 4\n4–8 Mei'],
+    datasets: [
+      {
+        label: 'Tiket Masuk',
+        data: [3, 0, 3, 2],
+        borderColor: TEAL,
+        backgroundColor: 'rgba(16,185,129,.08)',
+        fill: true,
+        tension: .4,
+        pointBackgroundColor: TEAL,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2
+      },
+      {
+        label: 'Tiket Resolved',
+        data: [1, 1, 2, 1],
+        borderColor: SKY,
+        backgroundColor: 'rgba(56,189,248,.06)',
+        fill: true,
+        tension: .4,
+        pointBackgroundColor: SKY,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2,
+        borderDash: [5,3]
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { autoSkip: false } },
+      y: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { stepSize: 1 }, min: 0, max: 4 }
+    }
+  }
+});
+</script>
+</body>
+</html>
