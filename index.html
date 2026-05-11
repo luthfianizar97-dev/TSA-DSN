@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PMO Weekly Report — NTI × DSN Group · Week 4</title>
+<title>PMO Weekly Report — NTI × DSN Group · Week 5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -265,11 +265,12 @@ html, body {
 /* Top tabs row */
 .tabs-row {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   padding: 4px 0 0;
   border-top: 1px solid var(--border);
   overflow-x: auto;
   scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 .tabs-row::-webkit-scrollbar { height: 4px; }
 .tabs-row::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
@@ -277,7 +278,7 @@ html, body {
 .tab-btn {
   background: transparent;
   border: none;
-  padding: 0.65rem 0.95rem;
+  padding: 0.7rem 1rem;
   cursor: pointer;
   color: var(--tab-color-inactive);
   font-size: 13px;
@@ -288,21 +289,52 @@ html, body {
   align-items: center;
   gap: 7px;
   white-space: nowrap;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.18s, background 0.18s, border-color 0.18s;
   font-family: inherit;
   margin-bottom: -1px;
   border-bottom: 2px solid transparent;
+  -webkit-tap-highlight-color: rgba(30, 64, 175, 0.1);
+  touch-action: manipulation;
 }
-.tab-btn:hover { color: var(--text-1); }
-.tab-btn.active {
-  color: var(--tab-color-active);
-  border-bottom-color: var(--tab-color-active);
-  font-weight: 600;
+.tab-btn:hover {
+  color: var(--text-1);
+  background: var(--bg-soft);
+}
+
+/* LIGHT MODE TAB STYLING — clean, professional */
+[data-theme="light"] .tab-btn {
+  color: #64748B;
+}
+[data-theme="light"] .tab-btn:hover {
+  color: #1E40AF;
+  background: rgba(30, 64, 175, 0.06);
 }
 [data-theme="light"] .tab-btn.active {
-  background: var(--primary-soft);
+  color: #1E40AF;
+  background: #FFFFFF;
+  border-bottom-color: #1E40AF;
+  font-weight: 600;
+  box-shadow: 0 -2px 8px rgba(30, 64, 175, 0.08);
 }
-.tab-btn svg { width: 15px; height: 15px; }
+[data-theme="light"] .tab-btn.active .tab-badge {
+  background: #1E40AF;
+  color: white;
+  border: none;
+}
+
+/* DARK MODE TAB STYLING */
+[data-theme="dark"] .tab-btn.active {
+  color: var(--tab-color-active);
+  border-bottom-color: var(--tab-color-active);
+  background: var(--tab-bg-active);
+  font-weight: 600;
+}
+[data-theme="dark"] .tab-btn.active .tab-badge {
+  background: var(--tab-color-active);
+  color: var(--bg-page);
+}
+
+.tab-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 .tab-badge {
   background: var(--bg-soft);
   color: var(--text-2);
@@ -311,14 +343,8 @@ html, body {
   border-radius: 10px;
   font-weight: 600;
   margin-left: 2px;
-}
-.tab-btn.active .tab-badge {
-  background: var(--tab-color-active);
-  color: var(--tab-bg-active);
-}
-[data-theme="light"] .tab-btn.active .tab-badge {
-  background: var(--primary);
-  color: white;
+  border: 1px solid var(--border);
+  transition: all 0.18s;
 }
 
 /* ═══════════════ MAIN CONTENT ═══════════════ */
@@ -460,10 +486,13 @@ html, body {
 .pill-info { background: var(--info-soft); color: var(--info-text); border: 1px solid var(--info-border); }
 .pill-primary { background: var(--primary-soft); color: var(--primary-text); border: 1px solid var(--info-border); }
 .pill-purple { background: var(--purple-soft); color: var(--purple-text); border: 1px solid var(--purple-border); }
+.pill-gray { background: var(--bg-strong); color: var(--text-2); border: 1px solid var(--border-strong); }
+.pill-primary { background: var(--primary-soft); color: var(--primary-text); border: 1px solid var(--primary); }
 .pill-gray { background: var(--bg-soft); color: var(--text-2); border: 1px solid var(--border); }
 
 /* Tables */
 .table-wrap {
+  overflow-x: auto;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -1024,7 +1053,7 @@ table.problem-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 12px;
-  min-width: 1400px;
+  min-width: 1100px;
 }
 table.problem-table thead tr {
   background: var(--bg-soft);
@@ -1125,13 +1154,127 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
   opacity: 0.4;
 }
 
-/* Responsive */
+/* ═══════════════ RESPONSIVE — Tablet ═══════════════ */
+@media (max-width: 1100px) {
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .chart-row { grid-template-columns: 1fr; }
+  .module-grid { grid-template-columns: repeat(2, 1fr); }
+  .main-wrap { padding: 1.25rem 1rem 2rem; }
+}
+
+/* ═══════════════ RESPONSIVE — Mobile ═══════════════ */
 @media (max-width: 768px) {
-  .ticket-meta { grid-template-columns: repeat(2, 1fr); }
+  .main-wrap { padding: 1rem 0.75rem 2rem; }
+  .app-header-inner { padding: 0 0.75rem; }
+  .app-header-row1 { padding: 0.7rem 0; flex-wrap: wrap; gap: 0.5rem; }
+  .brand-name { font-size: 14px; }
+  .brand-sub { font-size: 11px; }
+  .header-meta { gap: 8px; flex-wrap: wrap; }
+  .header-meta .meta-item { display: none; }
+  .status-pill { font-size: 10px; padding: 3px 8px; }
+
+  .tabs-row {
+    margin: 0 -0.75rem;
+    padding: 4px 0.75rem 0;
+    gap: 0;
+  }
+  .tab-btn { padding: 0.6rem 0.75rem; font-size: 12px; gap: 5px; }
+  .tab-btn svg { width: 14px; height: 14px; }
+  .tab-badge { font-size: 10px; padding: 1px 6px; }
+
+  .page-title { font-size: 18px; }
+  .page-sub { font-size: 12px; }
+
+  /* Health card */
+  .health-card { padding: 1rem 1.1rem; }
+  .health-row { grid-template-columns: 1fr; gap: 1rem; }
+  .health-score {
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-left: 0;
+    padding-top: 0.75rem;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .health-title { font-size: 17px; }
+  .health-msg { font-size: 12.5px; }
+  .health-score-val { font-size: 36px; }
+
+  /* KPI Grid */
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .kpi-card { padding: 0.8rem 0.9rem; }
+  .kpi-value { font-size: 24px; }
+  .kpi-label { font-size: 10px; }
+  .kpi-sub { font-size: 11px; }
+
+  /* Tables */
+  .ticket-meta { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .module-grid { grid-template-columns: 1fr 1fr; }
-  .header-meta { display: none; }
-  .app-header-row1 { padding: 0.7rem 0; }
-  .main-wrap { padding: 1rem; }
+
+  /* Filter bar */
+  .filter-bar { padding: 0.6rem 0.75rem; gap: 10px; flex-direction: column; align-items: stretch; }
+  .filter-group { width: 100%; }
+  .filter-select { min-width: 0; flex: 1; width: 100%; }
+  .filter-search { width: 100%; }
+  .filter-results { margin-left: 0; text-align: center; padding-top: 4px; border-top: 1px solid var(--border); }
+
+  /* Card */
+  .card { padding: 0.9rem 1rem; }
+  .card-header { flex-wrap: wrap; gap: 8px; }
+  .card-title { font-size: 13px; }
+
+  /* Info rows */
+  .info-row { flex-direction: column; align-items: flex-start; gap: 2px; padding: 0.6rem 0; }
+  .info-val { text-align: left; }
+
+  /* SLA row */
+  .sla-row { grid-template-columns: 1fr; gap: 6px; padding: 0.7rem 0.85rem; }
+  .sla-row .sla-desc { font-size: 12px; }
+
+  /* Timeline */
+  .timeline-week { grid-template-columns: 1fr; gap: 8px; padding: 0.85rem 0; }
+  .timeline-day-pill { flex-direction: row; gap: 8px; padding: 0.4rem 0.7rem; width: fit-content; }
+  .timeline-day-pill .day-date { font-size: 12px; }
+  .timeline-item { font-size: 12.5px; }
+
+  /* Tables — make scrollable */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.data-table { font-size: 12px; min-width: 600px; }
+  table.data-table th, table.data-table td { padding: 0.55rem 0.6rem; }
+
+  /* Problem table */
+  table.problem-table { font-size: 11px; min-width: 900px; }
+  table.problem-table th, table.problem-table td { padding: 0.5rem 0.5rem; }
+
+  /* Report footer */
+  .report-footer { flex-direction: column; align-items: flex-start; gap: 4px; font-size: 10px; }
+
+  /* Timesheet header */
+  .ts-week-header { flex-direction: column; align-items: flex-start; gap: 4px; padding: 0.7rem 0.85rem; }
+
+  /* Risk card */
+  .risk-card { padding: 0.85rem 0.95rem; }
+  .risk-card > div[style*="display: flex"] { flex-direction: column !important; gap: 6px !important; }
+}
+
+/* ═══════════════ RESPONSIVE — Small Mobile ═══════════════ */
+@media (max-width: 480px) {
+  .brand-logo { width: 30px; height: 30px; font-size: 14px; }
+  .brand-name { font-size: 13px; }
+  .brand-sub { font-size: 10px; }
+  .theme-toggle { padding: 2px; }
+  .theme-toggle button { padding: 4px 8px; font-size: 11px; }
+  .theme-toggle button svg { width: 12px; height: 12px; }
+
+  .kpi-grid { grid-template-columns: 1fr; }
+  .module-grid { grid-template-columns: 1fr; }
+  .ticket-meta { grid-template-columns: 1fr; }
+  .main-wrap { padding: 0.75rem 0.5rem 2rem; }
+
+  .health-score-val { font-size: 32px; }
+  .kpi-value { font-size: 22px; }
 }
 </style>
 </head>
@@ -1152,7 +1295,7 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
       <div class="header-meta">
         <div class="meta-item">
           <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.5-12a.5.5 0 00-1 0v4.5l3 1.732a.5.5 0 10.5-.866l-2.5-1.443V6z"/></svg>
-          Week 4 / 13 — 4 Mei 2026
+          Week 5 / 13 — 11 Mei 2026
         </div>
         <span class="status-pill">On Track</span>
         <div class="theme-toggle" id="themeToggle">
@@ -1180,12 +1323,12 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
       <button class="tab-btn" data-tab="tickets">
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v2.5a.5.5 0 01-1 0 1 1 0 100 2 .5.5 0 011 0V15a2 2 0 01-2 2H4a2 2 0 01-2-2v-2.5a.5.5 0 011 0 1 1 0 000-2 .5.5 0 01-1 0V5z"/></svg>
         Detail Tiket
-        <span class="tab-badge">8</span>
+        <span class="tab-badge">13</span>
       </button>
       <button class="tab-btn" data-tab="problems">
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h7a1 1 0 110 2H4a1 1 0 01-1-1zm13.707 1.293a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L15 15.414V17a1 1 0 102 0v-1.586l1.293 1.293a1 1 0 001.414-1.414l-3-3z"/></svg>
         Problem Tracker
-        <span class="tab-badge">12</span>
+        <span class="tab-badge">13</span>
       </button>
       <button class="tab-btn" data-tab="weekly">
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 011 1v1h6V3a1 1 0 112 0v1h1a2 2 0 012 2v11a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h1V3a1 1 0 011-1zm10 5H4v10h12V7z"/></svg>
@@ -1198,7 +1341,7 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
       <button class="tab-btn" data-tab="risks">
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.485 2.495a1.75 1.75 0 013.03 0l6.28 10.875a1.75 1.75 0 01-1.515 2.625H3.72a1.75 1.75 0 01-1.515-2.625L8.485 2.495zM10 7a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 7zm0 8a1 1 0 100-2 1 1 0 000 2z"/></svg>
         Risk &amp; Issue
-        <span class="tab-badge">4</span>
+        <span class="tab-badge">5</span>
       </button>
       <button class="tab-btn" data-tab="contract">
         <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4h3a3 3 0 006 0h3a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H7a1 1 0 01-1-1z"/></svg>
@@ -1218,95 +1361,97 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
   <div id="tab-exec" class="page active">
     <div class="page-header">
       <h1 class="page-title">Executive Summary</h1>
-      <p class="page-sub">Ringkasan eksekutif proyek per akhir Week 4 — kondisi proyek, pencapaian minggu ini, dan area perhatian.</p>
+      <p class="page-sub">Ringkasan eksekutif proyek per akhir Week 5 — kondisi proyek, pencapaian minggu ini, dan area perhatian.</p>
     </div>
 
     <!-- Health card -->
     <div class="health-card">
-      <div class="health-row">
+      <div class="health-row" style="grid-template-columns: 1fr">
         <div>
           <div class="health-label">Project Health</div>
-          <div class="health-title">On Track — Performa SLA Sangat Baik</div>
-          <div class="health-msg">5 dari 8 tiket selesai (62.5% resolusi rate), 0 SLA overdue, semua tiket selesai lebih cepat dari target. 2 tiket masih dalam progress (TSA-003, TSA-004), 1 tiket baru masuk (TSA-008) dan butuh investigasi.</div>
-        </div>
-        <div class="health-score">
-          <div class="health-score-val">A−</div>
-          <div class="health-score-label">Project Score</div>
+          <div class="health-title">On Track — 5 Tiket Resolved, Batch Besar Aktif</div>
+          <div class="health-msg">5 dari 13 tiket selesai (38.5% resolusi rate), 0 SLA overdue. TSA-Oil-01-012 (Jurnal Alokasi Otomatis) berhasil diselesaikan hari ini (11 Mei). 7 tiket aktif dalam proses, 1 tiket baru (TSA-Oil-04-014). Batch 30 April masih dominan — fokus penyelesaian tiket Corn &amp; Oil.</div>
         </div>
       </div>
     </div>
 
     <!-- Weekly KPIs (Week 4 metrics) -->
-    <div class="section-label">📅 Metrik Minggu Ini (Week 4 · 4–8 Mei 2026)</div>
+    <div class="section-label">📅 Metrik Minggu Ini (Week 5 · 11–15 Mei 2026)</div>
     <div class="kpi-grid">
       <div class="kpi-card accent" style="--accent-color: var(--primary)">
         <div class="kpi-label">Pekan Berjalan</div>
-        <div class="kpi-value primary">4 / 13</div>
-        <div class="kpi-sub">30.7% dari kontrak</div>
-        <div class="progress-shell" style="margin-top: 8px"><div class="progress-fill" style="width: 30.7%"></div></div>
+        <div class="kpi-value primary">5 / 13</div>
+        <div class="kpi-sub">38.4% dari kontrak</div>
+        <div class="progress-shell" style="margin-top: 8px"><div class="progress-fill" style="width: 38.4%"></div></div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--info)">
         <div class="kpi-label">Tiket Diminta Pekan Ini</div>
-        <div class="kpi-value info">2</div>
-        <div class="kpi-sub">TSA-007, TSA-008 (request baru)</div>
+        <div class="kpi-value info">0</div>
+        <div class="kpi-sub">Tidak ada request baru</div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--success)">
         <div class="kpi-label">Tiket Selesai Pekan Ini</div>
         <div class="kpi-value success">1</div>
-        <div class="kpi-sub">TSA-007 — Petty cash payment</div>
+        <div class="kpi-sub">TSA-Oil-01-012 — Jurnal Alokasi Otomatis</div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--warning)">
         <div class="kpi-label">Carry Over dari Pekan Lalu</div>
-        <div class="kpi-value warning">2</div>
-        <div class="kpi-sub">TSA-003, TSA-004 (lanjut Week 5)</div>
+        <div class="kpi-value warning">8</div>
+        <div class="kpi-sub">7 In Progress + 1 Open</div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--purple)">
         <div class="kpi-label">Total Tiket Aktif Pekan Ini</div>
-        <div class="kpi-value purple">4</div>
-        <div class="kpi-sub">2 baru + 2 carry over</div>
+        <div class="kpi-value purple">8</div>
+        <div class="kpi-sub">Semua carry over dari batch 30/04</div>
       </div>
     </div>
 
     <!-- Cumulative KPIs -->
-    <div class="section-label">📊 Akumulasi Proyek (Week 1 → Week 4)</div>
+    <div class="section-label">📊 Akumulasi Proyek (Week 1 → Week 5)</div>
     <div class="kpi-grid">
       <div class="kpi-card accent" style="--accent-color: var(--primary)">
         <div class="kpi-label">Total Tiket</div>
-        <div class="kpi-value">8</div>
-        <div class="kpi-sub">TSA-001 s/d TSA-008</div>
+        <div class="kpi-value">13</div>
+        <div class="kpi-sub">Init, Banana, Corn, Oil, IC</div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--success)">
         <div class="kpi-label">Resolved</div>
-        <div class="kpi-value success">5 <span class="kpi-trend up">62.5%</span></div>
+        <div class="kpi-value success">5 <span class="kpi-trend up">38.5%</span></div>
         <div class="kpi-sub">5 tiket selesai</div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--info)">
         <div class="kpi-label">In Progress</div>
-        <div class="kpi-value info">2</div>
-        <div class="kpi-sub">TSA-003, TSA-004</div>
+        <div class="kpi-value info">7</div>
+        <div class="kpi-sub">Banana-01, Corn-01~04, Oil-03,05, IC-01</div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--danger)">
         <div class="kpi-label">Open / Baru</div>
         <div class="kpi-value danger">1</div>
-        <div class="kpi-sub">TSA-008</div>
+        <div class="kpi-sub">TSA-Oil-04-014</div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--warning)">
         <div class="kpi-label">SLA Overdue</div>
         <div class="kpi-value warning">0</div>
-        <div class="kpi-sub">Semua tepat / lebih cepat</div>
+        <div class="kpi-sub">Semua dalam target SLA</div>
       </div>
     </div>
 
     <!-- Alert -->
-    <div class="alert" style="margin-top: 1rem">
+    <div class="alert alert-success" style="margin-top: 1rem; background: var(--success-soft); border-color: var(--success-border)">
+      <svg class="alert-icon" style="color: var(--success)" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+      <div class="alert-body" style="color: var(--success-text)">
+        <strong>Resolved hari ini (11 Mei)!</strong> TSA-Oil-01-012 — Jurnal Alokasi Otomatis Yayasan DSNU berhasil diselesaikan. Penyebab: <code style="font-size:11px;background:rgba(0,0,0,0.08);padding:1px 5px;border-radius:3px">date_stop</code> di transfer model di-set ke akhir 2025 sehingga cron tidak iterasi 2026. Solusi: kosongkan Stop Date, klik Compute Transfer.
+      </div>
+    </div>
+    <div class="alert" style="margin-top: 0.6rem">
       <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.485 2.495a1.75 1.75 0 013.03 0l6.28 10.875a1.75 1.75 0 01-1.515 2.625H3.72a1.75 1.75 0 01-1.515-2.625L8.485 2.495zM10 7a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 7zm0 8a1 1 0 100-2 1 1 0 000 2z"/></svg>
       <div class="alert-body">
-        <strong>Perhatian — Tindakan minggu ini.</strong> TSA-003 (jurnal otomatis 2026) &amp; TSA-004 (approval retur Kanban) carry over dari Week 3, masih berlangsung. TSA-008 (contra account Ha Mgmt — PT PUL) baru masuk status Open dan butuh investigasi konfigurasi account group &amp; allocation rule.
+        <strong>Carry-over Week 5.</strong> 7 tiket Corn &amp; Oil masih aktif (TSA-Banana-01-003, TSA-Corn-01~03, TSA-Oil-03/05, TSA-IC-01). TSA-Corn-03-006 ETA 14 Mei. TSA-Oil-04-014 perlu konfirmasi detail dari user. VPN akses belum tersedia — jadi hambatan utama efisiensi.
       </div>
     </div>
 
     <!-- Highlights & Lowlights -->
-    <div class="section-label">Highlights &amp; Lowlights — Week 4</div>
+    <div class="section-label">Highlights &amp; Lowlights — Week 5</div>
     <div class="two-col">
       <div class="card" style="border-left: 3px solid var(--success)">
         <div class="card-header" style="border-bottom: none; padding-bottom: 0">
@@ -1316,9 +1461,9 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
           </div>
         </div>
         <ul style="list-style: none; padding: 0; margin-top: 4px">
-          <li style="padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px"><span class="pill pill-success no-dot" style="flex-shrink: 0">TSA-007</span><span>Petty cash payment journal validation diselesaikan dalam 1 hari (variance −2 hari).</span></li>
-          <li style="padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px"><span class="pill pill-info no-dot" style="flex-shrink: 0">TSA-004</span><span>Fix datetime.combine() di-deploy ke staging — tinggal validasi penuh.</span></li>
-          <li style="padding: 8px 0; display: flex; gap: 10px"><span class="pill pill-primary no-dot" style="flex-shrink: 0">TSA-003</span><span>Investigasi cron <code>ir.cron</code> berjalan sesuai plan.</span></li>
+          <li style="padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px"><span class="pill pill-success no-dot" style="flex-shrink: 0">TSA-Oil-01</span><span>Jurnal alokasi otomatis Yayasan DSNU resolved hari ini (11 Mei) — root cause ditemukan &amp; fix berhasil.</span></li>
+          <li style="padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px"><span class="pill pill-success no-dot" style="flex-shrink: 0">TSA-Corn-04</span><span>PO lock period invoicing resolved 07 Mei — confirm ke user, bill sudah posted.</span></li>
+          <li style="padding: 8px 0; display: flex; gap: 10px"><span class="pill pill-success no-dot" style="flex-shrink: 0">TSA-Oil-06</span><span>Ha Management alokasi GL (critical) resolved 07 Mei — clean data duplikat berhasil.</span></li>
         </ul>
       </div>
       <div class="card" style="border-left: 3px solid var(--warning)">
@@ -1329,46 +1474,46 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
           </div>
         </div>
         <ul style="list-style: none; padding: 0; margin-top: 4px">
-          <li style="padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px"><span class="pill pill-danger no-dot" style="flex-shrink: 0">VPN</span><span>Akses platform belum tersedia — tim NTI masih bergantung remote session &amp; source code dump.</span></li>
-          <li style="padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px"><span class="pill pill-warning no-dot" style="flex-shrink: 0">CR-001</span><span>Change Request TSA-001 belum ditandatangani klien — menahan kepastian scope.</span></li>
-          <li style="padding: 8px 0; display: flex; gap: 10px"><span class="pill pill-danger no-dot" style="flex-shrink: 0">TSA-008</span><span>Tiket baru contra account belum punya ETA — perlu konfirmasi PIC PT PUL.</span></li>
+          <li style="padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px"><span class="pill pill-danger no-dot" style="flex-shrink: 0">VPN</span><span>Akses VPN platform masih belum tersedia di Week 5 — hambatan efisiensi teknis.</span></li>
+          <li style="padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px"><span class="pill pill-warning no-dot" style="flex-shrink: 0">Corn-03</span><span>TSA-Corn-03-006 (Code PO pada DO) ETA 14 Mei — perlu konfirmasi persetujuan metode field baru dari klien.</span></li>
+          <li style="padding: 8px 0; display: flex; gap: 10px"><span class="pill pill-danger no-dot" style="flex-shrink: 0">Oil-04</span><span>TSA-Oil-04-014 baru masuk stage Request — detail issue belum dikonfirmasi user (Andry Susanto).</span></li>
         </ul>
       </div>
     </div>
 
     <!-- Next Week -->
-    <div class="section-label">Rencana Week 5 (11 – 15 Mei 2026)</div>
+    <div class="section-label">Rencana Week 6 (18 – 22 Mei 2026)</div>
     <div class="card">
       <ol style="list-style: none; padding: 0">
         <li style="padding: 0.6rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center;">
           <span style="width: 26px; height: 26px; background: var(--primary-soft); color: var(--primary-text); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;">1</span>
-          <span class="pill pill-info no-dot" style="flex-shrink: 0">TSA-003</span>
-          <span style="flex: 1">Finalisasi &amp; UAT jurnal otomatis 2026</span>
+          <span class="pill pill-info no-dot" style="flex-shrink: 0">TSA-Banana-01</span>
+          <span style="flex: 1">Push fix datetime.combine ke production setelah user test OK</span>
           <span style="font-size: 11px; color: var(--text-3)">High Priority</span>
         </li>
         <li style="padding: 0.6rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center;">
           <span style="width: 26px; height: 26px; background: var(--primary-soft); color: var(--primary-text); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;">2</span>
-          <span class="pill pill-info no-dot" style="flex-shrink: 0">TSA-004</span>
-          <span style="flex: 1">Push fix datetime.combine ke production setelah staging OK</span>
-          <span style="font-size: 11px; color: var(--text-3)">High Priority</span>
+          <span class="pill pill-info no-dot" style="flex-shrink: 0">TSA-Corn-03</span>
+          <span style="flex: 1">Deploy Code PO pada DO report ke production (ETA 14 Mei)</span>
+          <span style="font-size: 11px; color: var(--text-3)">Medium Priority</span>
         </li>
         <li style="padding: 0.6rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center;">
           <span style="width: 26px; height: 26px; background: var(--primary-soft); color: var(--primary-text); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;">3</span>
-          <span class="pill pill-danger no-dot" style="flex-shrink: 0">TSA-008</span>
-          <span style="flex: 1">Penyelesaian contra account Ha Management (PT PUL Palm Oil)</span>
+          <span class="pill pill-info no-dot" style="flex-shrink: 0">TSA-Corn-01/02</span>
+          <span style="flex: 1">Execute &amp; validasi fix Vendor Bill prefix &amp; multi-PO billing di DSN</span>
           <span style="font-size: 11px; color: var(--text-3)">High Priority</span>
         </li>
         <li style="padding: 0.6rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center;">
           <span style="width: 26px; height: 26px; background: var(--primary-soft); color: var(--primary-text); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;">4</span>
-          <span class="pill pill-warning no-dot" style="flex-shrink: 0">TSA-001</span>
-          <span style="flex: 1">Konfirmasi &amp; penandatanganan Change Request</span>
+          <span class="pill pill-warning no-dot" style="flex-shrink: 0">TSA-Oil-04</span>
+          <span style="flex: 1">Konfirmasi detail TSA-Oil-04-014 dengan Andry Susanto (PT PUL)</span>
           <span style="font-size: 11px; color: var(--text-3)">Medium</span>
         </li>
         <li style="padding: 0.6rem 0; display: flex; gap: 12px; align-items: center;">
           <span style="width: 26px; height: 26px; background: var(--primary-soft); color: var(--primary-text); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;">5</span>
-          <span class="pill pill-success no-dot" style="flex-shrink: 0">TSA-002</span>
-          <span style="flex: 1">Verifikasi &amp; closing ticket SMTP</span>
-          <span style="font-size: 11px; color: var(--text-3)">Low</span>
+          <span class="pill pill-primary no-dot" style="flex-shrink: 0">VPN / Akses</span>
+          <span style="flex: 1">Follow-up akses VPN ke platform DSN untuk efisiensi kerja teknis</span>
+          <span style="font-size: 11px; color: var(--text-3)">Action Item</span>
         </li>
       </ol>
     </div>
@@ -1384,25 +1529,35 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
     <!-- KPI -->
     <div class="kpi-grid">
       <div class="kpi-card accent clickable" style="--accent-color: var(--primary)" data-filter-status="all">
-        <div class="kpi-label">Resolusi Rate</div>
-        <div class="kpi-value primary">62.5%</div>
-        <div class="kpi-sub">5 dari 8 tiket selesai</div>
-        <div class="progress-shell"><div class="progress-fill" style="width: 62.5%"></div></div>
+        <div class="kpi-label">Resolusi Rate (Done)</div>
+        <div class="kpi-value primary">38.5%</div>
+        <div class="kpi-sub">5 dari 13 tiket Done</div>
+        <div class="progress-shell"><div class="progress-fill" style="width: 38.5%"></div></div>
       </div>
-      <div class="kpi-card accent clickable" style="--accent-color: var(--success)" data-filter-status="resolved">
-        <div class="kpi-label">Resolved</div>
+      <div class="kpi-card accent clickable" style="--accent-color: var(--success)" data-filter-status="done">
+        <div class="kpi-label">Done</div>
         <div class="kpi-value success">5</div>
         <div class="kpi-sub">Click untuk lihat detail →</div>
       </div>
-      <div class="kpi-card accent clickable" style="--accent-color: var(--info)" data-filter-status="progress">
-        <div class="kpi-label">In Progress / On-Going</div>
-        <div class="kpi-value info">2</div>
-        <div class="kpi-sub">TSA-003, TSA-004</div>
+      <div class="kpi-card accent clickable" style="--accent-color: var(--warning)" data-filter-status="ready-execute-dsn">
+        <div class="kpi-label">Ready Execute DSN</div>
+        <div class="kpi-value warning">5</div>
+        <div class="kpi-sub">Menunggu eksekusi DSN →</div>
       </div>
-      <div class="kpi-card accent clickable" style="--accent-color: var(--danger)" data-filter-status="open">
-        <div class="kpi-label">Open</div>
+      <div class="kpi-card accent clickable" style="--accent-color: var(--purple)" data-filter-status="ready-test-user">
+        <div class="kpi-label">Ready Test User</div>
+        <div class="kpi-value purple">1</div>
+        <div class="kpi-sub">TSA-Banana-01-003 →</div>
+      </div>
+      <div class="kpi-card accent clickable" style="--accent-color: var(--info)" data-filter-status="progress-nti">
+        <div class="kpi-label">On Progress NTI</div>
+        <div class="kpi-value info">1</div>
+        <div class="kpi-sub">TSA-Oil-05-015 →</div>
+      </div>
+      <div class="kpi-card accent clickable" style="--accent-color: var(--danger)" data-filter-status="request">
+        <div class="kpi-label">Request (Open)</div>
         <div class="kpi-value danger">1</div>
-        <div class="kpi-sub">TSA-008 — baru masuk</div>
+        <div class="kpi-sub">TSA-Oil-04-014 →</div>
       </div>
     </div>
 
@@ -1463,7 +1618,7 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
   <div id="tab-tickets" class="page">
     <div class="page-header">
       <h1 class="page-title">Detail Tiket</h1>
-      <p class="page-sub">Daftar lengkap 8 tiket TSA — gunakan filter untuk menyaring berdasarkan status, prioritas, kategori, atau pencarian.</p>
+      <p class="page-sub">Daftar lengkap 13 tiket TSA — gunakan filter untuk menyaring berdasarkan status, prioritas, kategori, atau pencarian.</p>
     </div>
 
     <!-- Filter Bar -->
@@ -1471,18 +1626,24 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
       <div class="filter-group">
         <span class="filter-label">Status</span>
         <select class="filter-select" id="filterStatus">
-          <option value="all">Semua</option>
-          <option value="resolved">Resolved</option>
-          <option value="progress">In Progress</option>
-          <option value="open">Open</option>
+          <option value="all">Semua Stage</option>
+          <option value="request">Request</option>
+          <option value="progress-nti">On Progress NTI</option>
+          <option value="ready-execute-dsn">Ready to Execute DSN</option>
+          <option value="progress-dsn">On Progress DSN</option>
+          <option value="ready-test-user">Ready to Test User</option>
+          <option value="done">Done</option>
+          <option value="revision">Revision</option>
         </select>
       </div>
       <div class="filter-group">
         <span class="filter-label">Prioritas</span>
         <select class="filter-select" id="filterPriority">
           <option value="all">Semua</option>
+          <option value="critical">Critical</option>
           <option value="high">High</option>
           <option value="medium">Medium</option>
+          <option value="low">Low</option>
         </select>
       </div>
       <div class="filter-group">
@@ -1491,13 +1652,14 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
           <option value="all">Semua</option>
           <option value="technical">Technical</option>
           <option value="functional">Functional</option>
+          <option value="information">Information</option>
         </select>
       </div>
       <div class="filter-group">
         <input type="text" id="ticketSearch" class="filter-search" placeholder="Cari ID, deskripsi, perusahaan, PIC..." />
         <button class="filter-reset" id="resetFilters">Reset</button>
       </div>
-      <div class="filter-results" id="filterResults">8 dari 8 tiket</div>
+      <div class="filter-results" id="filterResults">13 dari 13 tiket</div>
     </div>
 
     <div class="ticket-row-hint">
@@ -1546,23 +1708,23 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
     <div class="problem-summary">
       <div class="kpi-card accent" style="--accent-color: var(--primary)">
         <div class="kpi-label">Total Problem Logged</div>
-        <div class="kpi-value">12</div>
+        <div class="kpi-value">13</div>
         <div class="kpi-sub">Sejak 15 April 2026</div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--success)">
         <div class="kpi-label">Closed</div>
-        <div class="kpi-value success">9</div>
-        <div class="kpi-sub">75% closure rate</div>
+        <div class="kpi-value success">5</div>
+        <div class="kpi-sub">38.5% closure rate</div>
       </div>
       <div class="kpi-card accent" style="--accent-color: var(--info)">
-        <div class="kpi-label">Open / In Progress</div>
-        <div class="kpi-value info">3</div>
+        <div class="kpi-label">In Progress</div>
+        <div class="kpi-value info">7</div>
         <div class="kpi-sub">Sedang ditangani</div>
       </div>
-      <div class="kpi-card accent" style="--accent-color: var(--success)">
-        <div class="kpi-label">SLA Compliance</div>
-        <div class="kpi-value success">100%</div>
-        <div class="kpi-sub">Response ≤ Max Response</div>
+      <div class="kpi-card accent" style="--accent-color: var(--danger)">
+        <div class="kpi-label">Open</div>
+        <div class="kpi-value danger">1</div>
+        <div class="kpi-sub">TSA-Oil-04-014</div>
       </div>
     </div>
 
@@ -1578,18 +1740,20 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
         </select>
       </div>
       <div class="filter-group">
-        <span class="filter-label">Engineer</span>
-        <select class="filter-select" id="problemEngineer">
+        <span class="filter-label">Severity</span>
+        <select class="filter-select" id="problemSeverity">
           <option value="all">Semua</option>
-          <option value="luthfi">Luthfi A. Nizar</option>
-          <option value="dev-nti">Dev NTI Team</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
         </select>
       </div>
       <div class="filter-group">
-        <input type="text" id="problemSearch" class="filter-search" placeholder="Cari problem, requestor, engineer..." />
+        <input type="text" id="problemSearch" class="filter-search" placeholder="Cari problem, requestor, atau action..." />
         <button class="filter-reset" id="resetProblemFilters">Reset</button>
       </div>
-      <div class="filter-results" id="problemResults">12 dari 12 entries</div>
+      <div class="filter-results" id="problemResults">13 dari 13 entries</div>
     </div>
 
     <!-- Problem Table -->
@@ -1597,17 +1761,15 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
       <table class="problem-table" id="problemTable">
         <thead>
           <tr>
+            <th style="width: 40px; text-align: center">No.</th>
             <th>Problem Description</th>
             <th>Problem Time</th>
             <th>Response Time</th>
             <th>Max Response</th>
-            <th>Restoration Time</th>
-            <th>Restoration Action</th>
+            <th>Severity</th>
             <th>Resolution Time</th>
-            <th>Δ Resolution</th>
             <th>Resolution Action</th>
             <th>Requestor</th>
-            <th>Resolve By</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -1632,12 +1794,10 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
       </div>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 12.5px; color: var(--text-2); line-height: 1.6">
         <div><strong style="color: var(--text-1)">Problem Time</strong> — waktu problem dilaporkan oleh requestor.</div>
-        <div><strong style="color: var(--text-1)">Response Time</strong> — waktu engineer pertama kali respond / acknowledge problem.</div>
+        <div><strong style="color: var(--text-1)">Response Time</strong> — waktu PIC NTI pertama kali respond / acknowledge problem.</div>
         <div><strong style="color: var(--text-1)">Max Response</strong> — durasi dari Problem Time ke Response Time (jam:menit).</div>
-        <div><strong style="color: var(--text-1)">Restoration Time</strong> — waktu sistem kembali beroperasi (workaround / partial fix).</div>
-        <div><strong style="color: var(--text-1)">Restoration Action</strong> — tindakan untuk mengembalikan operasional sementara.</div>
-        <div><strong style="color: var(--text-1)">Resolution Time</strong> — waktu problem benar-benar terselesaikan (root cause).</div>
-        <div><strong style="color: var(--text-1)">Δ Resolution</strong> — durasi total dari Problem Time ke Resolution Time.</div>
+        <div><strong style="color: var(--text-1)">Severity</strong> — tingkat keparahan masalah (Critical/High/Medium/Low) sesuai SLA response time.</div>
+        <div><strong style="color: var(--text-1)">Resolution Time</strong> — waktu problem benar-benar terselesaikan (root cause fix).</div>
         <div><strong style="color: var(--text-1)">Resolution Action</strong> — tindakan akhir / deliverable ke requestor.</div>
       </div>
     </div>
@@ -1650,6 +1810,23 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
       <p class="page-sub">Catatan harian aktivitas dan progres tiap minggu sejak proyek dimulai (15 April 2026).</p>
     </div>
 
+    <div class="section-label">📊 Grafik Aktivitas Mingguan</div>
+    <div class="chart-card" style="margin-bottom: 1.5rem">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Weekly Summary — Masuk · Resolved · Resolved NTI · Carry Over</div>
+          <div class="card-sub">Visualisasi data dari sheet <code style="font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--bg-soft);padding:1px 5px;border-radius:3px">Weekly_Summary</code> (W1 → W5)</div>
+        </div>
+      </div>
+      <div class="chart-canvas-wrap" style="height: 320px"><canvas id="cWeeklySummary"></canvas></div>
+      <div style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 16px; font-size: 11.5px; color: var(--text-2)">
+        <div><span style="display:inline-block;width:10px;height:10px;background:var(--primary);border-radius:2px;vertical-align:middle;margin-right:5px"></span><strong>Tiket Masuk</strong> — tiket baru di minggu tersebut</div>
+        <div><span style="display:inline-block;width:10px;height:10px;background:var(--success);border-radius:2px;vertical-align:middle;margin-right:5px"></span><strong>Resolved</strong> — tiket Done (user signed-off)</div>
+        <div><span style="display:inline-block;width:10px;height:10px;background:var(--info);border-radius:2px;vertical-align:middle;margin-right:5px"></span><strong>Resolved NTI</strong> — tiket yang sisi NTI selesai (≥ Ready to Execute DSN)</div>
+        <div><span style="display:inline-block;width:10px;height:3px;background:var(--warning);vertical-align:middle;margin-right:5px"></span><strong>Carry Over</strong> — tiket yang lanjut ke minggu berikutnya</div>
+      </div>
+    </div>
+
     <div class="section-label">Ringkasan per Minggu</div>
     <div class="table-wrap" style="margin-bottom: 1.5rem">
       <table class="data-table">
@@ -1659,17 +1836,68 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
             <th>Periode</th>
             <th class="center">Tiket Masuk</th>
             <th class="center">Resolved</th>
+            <th class="center">Resolved NTI</th>
             <th class="center">Carry Over</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td style="color: var(--text-3)">Mgg 5</td><td style="color: var(--text-3)">11 – 15 Mei 2026</td><td class="center" style="color: var(--text-3)">—</td><td class="center" style="color: var(--text-3)">—</td><td class="center" style="color: var(--text-3)">—</td><td><span class="pill pill-gray no-dot">Planned</span></td></tr>
-          <tr><td><strong>Mgg 4</strong></td><td>4 – 8 Mei 2026</td><td class="center" style="color: var(--success); font-weight: 600">2</td><td class="center" style="color: var(--success); font-weight: 600">1</td><td class="center" style="color: var(--warning); font-weight: 600">2</td><td><span class="pill pill-info">Berjalan</span></td></tr>
-          <tr><td><strong>Mgg 3</strong></td><td>27 Apr – 1 Mei 2026</td><td class="center" style="color: var(--success); font-weight: 600">3</td><td class="center" style="color: var(--success); font-weight: 600">2</td><td class="center" style="color: var(--warning); font-weight: 600">1</td><td><span class="pill pill-info">Berjalan</span></td></tr>
-          <tr><td><strong>Mgg 2</strong></td><td>20 – 24 Apr 2026</td><td class="center">0</td><td class="center" style="color: var(--success); font-weight: 600">1</td><td class="center" style="color: var(--warning); font-weight: 600">2</td><td><span class="pill pill-success">Baik</span></td></tr>
-          <tr><td><strong>Mgg 1</strong></td><td>15 – 17 Apr 2026</td><td class="center" style="color: var(--success); font-weight: 600">3</td><td class="center" style="color: var(--success); font-weight: 600">1</td><td class="center" style="color: var(--text-3)">0</td><td><span class="pill pill-success">Baik</span></td></tr>
+          <tr style="background: var(--primary-soft)">
+            <td><strong style="color: var(--primary)">● W5</strong></td>
+            <td>11 – 15 Mei 2026</td>
+            <td class="center">0</td>
+            <td class="center" style="color: var(--text-3)">0</td>
+            <td class="center" style="color: var(--text-3)">0</td>
+            <td class="center" style="color: var(--warning); font-weight: 600">8</td>
+            <td><span class="pill pill-info">Current</span></td>
+          </tr>
+          <tr>
+            <td><strong>W4</strong></td>
+            <td>4 – 8 Mei 2026</td>
+            <td class="center">0</td>
+            <td class="center" style="color: var(--success); font-weight: 600">3</td>
+            <td class="center" style="color: var(--info); font-weight: 600">3</td>
+            <td class="center" style="color: var(--warning); font-weight: 600">7</td>
+            <td><span class="pill pill-success">Selesai</span></td>
+          </tr>
+          <tr>
+            <td><strong>W3</strong></td>
+            <td>27 Apr – 1 Mei 2026</td>
+            <td class="center" style="color: var(--primary); font-weight: 600">11</td>
+            <td class="center" style="color: var(--success); font-weight: 600">1</td>
+            <td class="center" style="color: var(--info); font-weight: 600">6</td>
+            <td class="center" style="color: var(--warning); font-weight: 600">10</td>
+            <td><span class="pill pill-success">Selesai</span></td>
+          </tr>
+          <tr>
+            <td><strong>W2</strong></td>
+            <td>20 – 24 Apr 2026</td>
+            <td class="center">0</td>
+            <td class="center" style="color: var(--success); font-weight: 600">1</td>
+            <td class="center" style="color: var(--info); font-weight: 600">1</td>
+            <td class="center" style="color: var(--text-3)">0</td>
+            <td><span class="pill pill-success">Selesai</span></td>
+          </tr>
+          <tr>
+            <td><strong>W1</strong></td>
+            <td>15 – 17 Apr 2026</td>
+            <td class="center" style="color: var(--primary); font-weight: 600">2</td>
+            <td class="center" style="color: var(--success); font-weight: 600">1</td>
+            <td class="center" style="color: var(--info); font-weight: 600">1</td>
+            <td class="center" style="color: var(--warning); font-weight: 600">1</td>
+            <td><span class="pill pill-success">Selesai</span></td>
+          </tr>
         </tbody>
+        <tfoot>
+          <tr style="background: var(--bg-soft); font-weight: 700">
+            <td colspan="2" style="padding: 0.7rem 0.85rem">TOTAL (W1–W5)</td>
+            <td class="center">13</td>
+            <td class="center" style="color: var(--success)">5</td>
+            <td class="center" style="color: var(--info)">11</td>
+            <td class="center" style="color: var(--warning)">—</td>
+            <td></td>
+          </tr>
+        </tfoot>
       </table>
     </div>
 
@@ -1678,10 +1906,37 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title" style="color: var(--primary)">● Week 4 — Current</div>
-          <div class="card-sub">4 – 8 Mei 2026 · 2 tiket baru, 2 carry over (TSA-003, TSA-004)</div>
+          <div class="card-title" style="color: var(--primary)">● Week 5 — Current</div>
+          <div class="card-sub">11 – 15 Mei 2026 · TSA-Oil-01-012 resolved, 7 tiket aktif carry over</div>
         </div>
         <span class="pill pill-info">Active</span>
+      </div>
+      <div class="timeline-week">
+        <div class="timeline-day-pill current"><div class="day-name">Sen</div><div class="day-date">11 Mei</div></div>
+        <div class="timeline-items">
+          <div class="timeline-item"><div class="timeline-item-bullet"></div><strong>TSA-Oil-01-012 Resolved ✅</strong> — Setting Stop Date di transfer model Yayasan DSNU, jurnal alokasi Jan–Mei 2026 langsung terbentuk</div>
+          <div class="timeline-item"><div class="timeline-item-bullet"></div>Update tracker DSN &amp; generate PMO Report Week 5</div>
+          <div class="timeline-item"><div class="timeline-item-bullet"></div>TSA-Oil-05-015 — lanjutkan investigasi journal items AR/AP</div>
+        </div>
+      </div>
+      <div class="timeline-week">
+        <div class="timeline-day-pill"><div class="day-name">Sel–Jum</div><div class="day-date">12–15 Mei</div></div>
+        <div class="timeline-items">
+          <div class="timeline-item"><div class="timeline-item-bullet"></div>Lanjutkan TSA-Banana-01-003 — coordinate push ke production setelah user test OK</div>
+          <div class="timeline-item"><div class="timeline-item-bullet"></div>TSA-Corn-01/02 — execute &amp; validasi fix Vendor Bill di DSN</div>
+          <div class="timeline-item"><div class="timeline-item-bullet"></div>TSA-Corn-03 — ETA deploy 14 Mei, tunggu konfirmasi klien</div>
+          <div class="timeline-item"><div class="timeline-item-bullet"></div>TSA-Oil-03/04 — follow up konfirmasi detail dengan PIC masing-masing</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Week 4</div>
+          <div class="card-sub">4 – 8 Mei 2026 · 3 tiket resolved (Corn-04, Oil-06, Oil-01 wrap), 3 NTI done, 7 carry over</div>
+        </div>
+        <span class="pill pill-success">Selesai</span>
       </div>
       <div class="timeline-week">
         <div class="timeline-day-pill current"><div class="day-name">Sen</div><div class="day-date">4 Mei</div></div>
@@ -1723,16 +1978,15 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
       <div class="card-header">
         <div>
           <div class="card-title">Week 3</div>
-          <div class="card-sub">27 Apr – 1 Mei 2026 · KOM Internal, 3 tiket baru masuk</div>
+          <div class="card-sub">27 Apr – 1 Mei 2026 · KOM Internal, 11 tiket baru masuk (batch 30/04), 6 NTI done</div>
         </div>
         <span class="pill pill-success">Selesai</span>
       </div>
-      <p style="font-size: 13px; color: var(--text-2); margin-bottom: 0.5rem">KOM Internal dilaksanakan, fixing issue dari spreadsheet DSN, CR TSA-001 disiapkan. TSA-005 &amp; TSA-006 selesai di hari yang sama. TSA-004 mulai dianalisis (carry over ke Week 4). 1 Mei libur Hari Buruh.</p>
+      <p style="font-size: 13px; color: var(--text-2); margin-bottom: 0.5rem">KOM Internal dilaksanakan. Masuk banyak tiket baru dari tim DSN (TSA-Banana, TSA-Corn, TSA-Oil, TSA-IC) — total 11 tiket di 30 April. TSA-Corn-04-007 (Lock Period) resolved. 1 Mei libur Hari Buruh.</p>
       <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.5rem">
-        <span class="pill pill-success no-dot">TSA-005 Resolved</span>
-        <span class="pill pill-success no-dot">TSA-006 Resolved</span>
-        <span class="pill pill-info no-dot">TSA-004 On-Going</span>
-        <span class="pill pill-warning no-dot">CR TSA-001 Pending TTD</span>
+        <span class="pill pill-primary no-dot">11 tiket baru (batch 30/04)</span>
+        <span class="pill pill-info no-dot">6 NTI done</span>
+        <span class="pill pill-warning no-dot">10 carry over</span>
       </div>
     </div>
 
@@ -1744,10 +1998,10 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
         </div>
         <span class="pill pill-success">Selesai</span>
       </div>
-      <p style="font-size: 13px; color: var(--text-2); margin-bottom: 0.5rem">TSA-002 resolved (SMTP relay re-config), source code Git diberikan ke tim NTI, analisis awal TSA-003 (cron) carry over. Bergabung ke group koordinasi (sempat terlambat — invite masuk spam).</p>
+      <p style="font-size: 13px; color: var(--text-2); margin-bottom: 0.5rem">Bergabung ke group koordinasi DSN &amp; NTI. TSA-Init-1-001 (SMTP) selesai — dikonfigurasi ulang di Google Workspace &amp; Odoo. Source code Git DSN diberikan ke NTI. Monitoring 48 jam — clear.</p>
       <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.5rem">
-        <span class="pill pill-success no-dot">TSA-002 Resolved</span>
-        <span class="pill pill-info no-dot">TSA-003 Analisis</span>
+        <span class="pill pill-success no-dot">TSA-Init-1-001 Done (24/04)</span>
+        <span class="pill pill-success no-dot">SMTP Re-config OK</span>
       </div>
     </div>
 
@@ -1759,11 +2013,10 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
         </div>
         <span class="pill pill-success">Selesai</span>
       </div>
-      <p style="font-size: 13px; color: var(--text-2); margin-bottom: 0.5rem">Meeting pertama dengan DSN Group. DSN memberikan 3 issue — TSA-001 langsung ditangani &amp; selesai di hari yang sama. TSA-002 (SMTP) &amp; TSA-003 (jurnal otomatis) dicatat, mulai dianalisis.</p>
+      <p style="font-size: 13px; color: var(--text-2); margin-bottom: 0.5rem">Meeting pertama kali dengan pihak DSN. DSN memberikan issue pertama: TSA-Init-1-001 (SMTP) &amp; TSA-Init-2-002 (field Industry). TSA-Init-2-002 langsung ditangani pada hari yang sama.</p>
       <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.5rem">
-        <span class="pill pill-success no-dot">TSA-001 Opened &amp; Resolved</span>
-        <span class="pill pill-info no-dot">TSA-002 Opened</span>
-        <span class="pill pill-info no-dot">TSA-003 Opened</span>
+        <span class="pill pill-success no-dot">TSA-Init-2-002 Done (15/04)</span>
+        <span class="pill pill-primary no-dot">TSA-Init-1-001 Opened</span>
       </div>
     </div>
   </div>
@@ -1780,17 +2033,42 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
       <div class="alert-body">Data timesheet ini adalah <strong>estimasi/dummy</strong> — jam aktual belum dihitung. Update kolom Aktual di file Excel untuk pelaporan final.</div>
     </div>
 
-    <div class="section-label">Ringkasan Total (4 Minggu)</div>
+    <div class="section-label">Ringkasan Total (5 Minggu)</div>
     <div class="kpi-grid">
-      <div class="kpi-card accent" style="--accent-color: var(--success)"><div class="kpi-label">Grand Total</div><div class="kpi-value success">60.0 h</div><div class="kpi-sub">Estimasi 4 minggu</div></div>
+      <div class="kpi-card accent" style="--accent-color: var(--success)"><div class="kpi-label">Grand Total</div><div class="kpi-value success">74.5 h</div><div class="kpi-sub">Estimasi 5 minggu (s/d Week 5)</div></div>
       <div class="kpi-card accent" style="--accent-color: var(--info)"><div class="kpi-label">Development</div><div class="kpi-value info">39.5 h</div><div class="kpi-sub">66% total jam</div></div>
       <div class="kpi-card accent" style="--accent-color: var(--success)"><div class="kpi-label">BA / Dokumentasi</div><div class="kpi-value success">12.0 h</div><div class="kpi-sub">20% total jam</div></div>
       <div class="kpi-card accent" style="--accent-color: var(--danger)"><div class="kpi-label">QA / Testing</div><div class="kpi-value danger">6.5 h</div><div class="kpi-sub">11% total jam</div></div>
       <div class="kpi-card accent" style="--accent-color: var(--warning)"><div class="kpi-label">Meeting</div><div class="kpi-value warning">6.0 h</div><div class="kpi-sub">10% total jam</div></div>
     </div>
 
+    <div class="ts-week-header" style="background: var(--primary-soft); border-radius: 10px; padding: 12px 16px">
+      <span><span class="ts-week-name">Week 5 — Current</span> &nbsp; <span class="ts-week-date">11 – 15 Mei 2026</span></span>
+      <span class="ts-week-total">14.5 jam (est.)</span>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Tanggal</th><th>Aktivitas</th><th>Tipe</th><th>Tiket</th><th class="right">Jam</th></tr></thead>
+        <tbody>
+          <tr><td>Sen, 11 Mei</td><td>Setting TSA-Oil-01-012 (Jurnal Alokasi Otomatis) — Resolved!</td><td><span class="type-chip type-dev">Dev</span></td><td><span class="ticket-id">TSA-Oil-01-012</span></td><td class="right">3.0</td></tr>
+          <tr><td>Sen, 11 Mei</td><td>Update tracker DSN &amp; generate PMO Report Week 5</td><td><span class="type-chip type-ba">BA</span></td><td><span class="ticket-id">All</span></td><td class="right">1.5</td></tr>
+          <tr><td>Sen, 11 Mei</td><td>Analisis lanjutan TSA-Oil-05-015 — register payment issue</td><td><span class="type-chip type-dev">Dev</span></td><td><span class="ticket-id">TSA-Oil-05-015</span></td><td class="right">1.5</td></tr>
+          <tr><td>Sel, 12 Mei</td><td>Follow-up TSA-Banana-01-003 — koordinasi push ke production (est.)</td><td><span class="type-chip type-dev">Dev</span></td><td><span class="ticket-id">TSA-Banana-01-003</span></td><td class="right">2.0</td></tr>
+          <tr><td>Sel, 12 Mei</td><td>TSA-Corn-01/02 — execute &amp; validasi fix di DSN (est.)</td><td><span class="type-chip type-qa">QA</span></td><td><span class="ticket-id">Corn-01, Corn-02</span></td><td class="right">2.0</td></tr>
+          <tr><td>Rab, 13 Mei</td><td>TSA-Oil-03 — coding dynamic approval unreleased PO (est.)</td><td><span class="type-chip type-dev">Dev</span></td><td><span class="ticket-id">TSA-Oil-03-013</span></td><td class="right">3.0</td></tr>
+          <tr><td>Kam, 14 Mei</td><td>TSA-Corn-03 — deploy Code PO pada DO (ETA hari ini) (est.)</td><td><span class="type-chip type-dev">Dev</span></td><td><span class="ticket-id">TSA-Corn-03-006</span></td><td class="right">1.5</td></tr>
+        </tbody>
+        <tfoot>
+          <tr style="background: var(--bg-soft); font-weight: 600">
+            <td colspan="4" style="padding: 0.7rem 0.85rem">Subtotal Week 5 (est.)</td>
+            <td class="right" style="padding: 0.7rem 0.85rem">14.5 jam</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
     <div class="ts-week-header">
-      <span><span class="ts-week-name">Week 4 — Current</span> &nbsp; <span class="ts-week-date">4 – 8 Mei 2026</span></span>
+      <span><span class="ts-week-name">Week 4</span> &nbsp; <span class="ts-week-date">4 – 8 Mei 2026</span></span>
       <span class="ts-week-total">18.5 jam (est.)</span>
     </div>
     <div class="table-wrap">
@@ -1894,7 +2172,7 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
   <div id="tab-risks" class="page">
     <div class="page-header">
       <h1 class="page-title">Risk &amp; Issue Project</h1>
-      <p class="page-sub">Daftar risiko dan isu aktif yang sedang dimonitor — 1 risk high, 1 risk medium, 2 issue.</p>
+      <p class="page-sub">Daftar risiko dan isu aktif yang sedang dimonitor — 2 risk aktif, 3 issue aktif, 2 resolved this week.</p>
     </div>
 
     <div class="section-label">Active Risks &amp; Issues</div>
@@ -1905,7 +2183,7 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
         <span class="pill pill-danger">Open</span>
       </div>
       <div class="risk-title">Akses VPN/Platform Belum Tersedia</div>
-      <div class="risk-body">Tim NTI belum dapat akses langsung ke environment DSN — analisis tiket masih bergantung pada source code dump &amp; remote session. Dapat memperlambat resolusi tiket teknis, terutama untuk investigasi yang butuh akses database real-time atau replikasi error di environment client.</div>
+      <div class="risk-body">Tim NTI belum dapat akses langsung ke environment DSN di Week 5 — 5 minggu berlalu. Analisis tiket masih bergantung pada source code dump &amp; remote session. Memperlambat resolusi tiket teknis, terutama untuk debug langsung di environment klien.</div>
       <div style="display: flex; gap: 16px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; flex-wrap: wrap">
         <div><span style="color: var(--text-3)">Owner:</span> <strong>Tim DSN IT</strong></div>
         <div><span style="color: var(--text-3)">Mitigasi:</span> Source code dump + remote session</div>
@@ -1918,40 +2196,66 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
         <div class="risk-kind">RISK · MEDIUM</div>
         <span class="pill pill-warning">Monitoring</span>
       </div>
-      <div class="risk-title">CR TSA-001 Belum Ditandatangani</div>
-      <div class="risk-body">Change Request sudah disiapkan namun belum TTD klien — menahan kepastian scope finansial &amp; cut-off pekerjaan tambahan. Risiko pekerjaan TSA-001 berlanjut tanpa formal sign-off dapat menimbulkan konflik scope di akhir kontrak.</div>
+      <div class="risk-title">CR TSA-Init-1-001 Belum Ditandatangani</div>
+      <div class="risk-body">Change Request sudah disiapkan namun belum TTD klien — menahan kepastian scope finansial &amp; cut-off pekerjaan tambahan. Risiko pekerjaan berlanjut tanpa formal sign-off dapat menimbulkan konflik scope di akhir kontrak.</div>
       <div style="display: flex; gap: 16px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; flex-wrap: wrap">
         <div><span style="color: var(--text-3)">Owner:</span> <strong>PM (Luthfi)</strong></div>
-        <div><span style="color: var(--text-3)">Mitigasi:</span> Follow-up klien Week 5</div>
-        <div><span style="color: var(--text-3)">ETA Resolusi:</span> <strong>15 Mei 2026</strong></div>
+        <div><span style="color: var(--text-3)">Mitigasi:</span> Follow-up klien Week 5–6</div>
+        <div><span style="color: var(--text-3)">ETA Resolusi:</span> <strong>22 Mei 2026</strong></div>
       </div>
     </div>
 
     <div class="risk-card" style="--accent: var(--warning); margin-bottom: 0.85rem">
       <div class="risk-head">
-        <div class="risk-kind">ISSUE · MEDIUM</div>
+        <div class="risk-kind">ISSUE · HIGH</div>
         <span class="pill pill-info">In Progress</span>
       </div>
-      <div class="risk-title">TSA-003 — Jurnal Otomatis Belum Selesai</div>
-      <div class="risk-body">Investigasi cron <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--bg-soft);padding:1px 4px;border-radius:3px">ir.cron</code> berjalan; potensi dampak ke closing keuangan bulanan jika tidak segera teratasi. Yayasan DSNU (Palm Oil) — Jurnal Alokasi Cost Debet 23920000 OCL juga tidak terbentuk sejak Jan 2026.</div>
+      <div class="risk-title">TSA-Banana-01-003 — Fix Belum Deploy ke Production</div>
+      <div class="risk-body">Fix datetime.combine() sudah di staging dan Ready to Test User — namun belum push ke production. Perlu koordinasi dengan tim DSN untuk jadwal deployment agar tidak mengganggu operasional warehouse PT Panyindangan.</div>
       <div style="display: flex; gap: 16px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; flex-wrap: wrap">
-        <div><span style="color: var(--text-3)">Owner:</span> <strong>Dev NTI</strong></div>
-        <div><span style="color: var(--text-3)">Plan:</span> 3 hari dev + 2 hari UAT</div>
-        <div><span style="color: var(--text-3)">ETA Resolusi:</span> <strong>15 Mei 2026</strong></div>
+        <div><span style="color: var(--text-3)">Owner:</span> <strong>Luthfi A. Nizar</strong></div>
+        <div><span style="color: var(--text-3)">Mitigasi:</span> Fix sudah siap, tinggal jadwal push prod</div>
+        <div><span style="color: var(--text-3)">ETA Resolusi:</span> <strong>Week 6 (18 Mei)</strong></div>
       </div>
     </div>
 
     <div class="risk-card" style="--accent: var(--info); margin-bottom: 0.85rem">
       <div class="risk-head">
-        <div class="risk-kind">ISSUE · LOW</div>
-        <span class="pill pill-info">Ongoing</span>
+        <div class="risk-kind">ISSUE · MEDIUM</div>
+        <span class="pill pill-info">In Progress</span>
       </div>
-      <div class="risk-title">TSA-008 Baru Masuk — Open</div>
-      <div class="risk-body">Contra account Ha Management (PT PUL) belum terbaca — perlu validasi konfigurasi account group &amp; allocation rule. GL 51311402 (GS WAREHOUSING) &amp; 52112204 (GS HO TAXES LIC) tidak terbaca saat alokasi.</div>
+      <div class="risk-title">TSA-Corn-03-006 — Konfirmasi Metode Belum Diterima</div>
+      <div class="risk-body">Code penambahan Code PO pada DO sudah di branch NTI (ETA 14 Mei) namun menunggu konfirmasi klien apakah setuju menggunakan field baru po_code atau metode alternatif. Tanpa konfirmasi, deployment tidak bisa dilakukan.</div>
       <div style="display: flex; gap: 16px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; flex-wrap: wrap">
-        <div><span style="color: var(--text-3)">Owner:</span> <strong>Dev NTI</strong></div>
-        <div><span style="color: var(--text-3)">PIC Klien:</span> Andry Susanto (PT PUL)</div>
-        <div><span style="color: var(--text-3)">ETA Resolusi:</span> <strong>14 Mei 2026</strong></div>
+        <div><span style="color: var(--text-3)">Owner:</span> <strong>Luthfi A. Nizar</strong></div>
+        <div><span style="color: var(--text-3)">Mitigasi:</span> Code siap di branch — tunggu persetujuan</div>
+        <div><span style="color: var(--text-3)">ETA Resolusi:</span> <strong>14–18 Mei 2026</strong></div>
+      </div>
+    </div>
+
+    <div class="risk-card" style="--accent: var(--text-3); margin-bottom: 0.85rem; opacity: 0.8">
+      <div class="risk-head">
+        <div class="risk-kind">ISSUE · HIGH</div>
+        <span class="pill pill-success">Resolved ✅</span>
+      </div>
+      <div class="risk-title">TSA-Oil-01-012 — Jurnal Alokasi Otomatis Tidak Terbentuk (RESOLVED)</div>
+      <div class="risk-body">Resolved 11 Mei 2026. Root cause: date_stop di transfer model di-set ke akhir 2025. Fix: kosongkan Stop Date + Compute Transfer. Jurnal Januari–Mei 2026 langsung terbentuk untuk Yayasan DSNU.</div>
+      <div style="display: flex; gap: 16px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; flex-wrap: wrap">
+        <div><span style="color: var(--text-3)">Resolved:</span> <strong style="color: var(--success)">11 Mei 2026</strong></div>
+        <div><span style="color: var(--text-3)">By:</span> <strong>Luthfi A. Nizar</strong></div>
+      </div>
+    </div>
+
+    <div class="risk-card" style="--accent: var(--text-3); margin-bottom: 0.85rem; opacity: 0.8">
+      <div class="risk-head">
+        <div class="risk-kind">ISSUE · CRITICAL</div>
+        <span class="pill pill-success">Resolved ✅</span>
+      </div>
+      <div class="risk-title">TSA-Oil-06-016 — Alokasi Ha Management GL Duplikat (RESOLVED)</div>
+      <div class="risk-body">Resolved 07 Mei 2026. GL 51311402 & 52112204 tidak terbaca karena cost_distribution_line_id terduplikasi (100 transaksi). Data dibersihkan via query, alokasi diulang. Permanent fix: copy=False pada field.</div>
+      <div style="display: flex; gap: 16px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; flex-wrap: wrap">
+        <div><span style="color: var(--text-3)">Resolved:</span> <strong style="color: var(--success)">07 Mei 2026</strong></div>
+        <div><span style="color: var(--text-3)">By:</span> <strong>Luthfi A. Nizar</strong></div>
       </div>
     </div>
   </div>
@@ -1978,9 +2282,9 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
           <div class="info-row"><span class="info-key">PM / Assignee</span><span class="info-val">Luthfi Achmaddin Nizar</span></div>
           <div class="info-row"><span class="info-key">Tanggal Mulai</span><span class="info-val">15 April 2026</span></div>
           <div class="info-row"><span class="info-key">Estimasi Durasi</span><span class="info-val">3 Bulan (≈ 13 Minggu)</span></div>
-          <div class="info-row"><span class="info-key">Tanggal Selesai Kontrak</span><span class="info-val warning">14 Juli 2026</span></div>
-          <div class="info-row"><span class="info-key">Estimasi BAST</span><span class="info-val info">14 – 18 Juli 2026</span></div>
-          <div class="info-row"><span class="info-key">Follow-up Kontrak Baru (H-14)</span><span class="info-val warning">30 Juni 2026</span></div>
+          <div class="info-row"><span class="info-key">Tanggal Selesai Kontrak</span><span class="info-val warning">18 Juli 2026</span></div>
+          <div class="info-row"><span class="info-key">Estimasi BAST</span><span class="info-val info">11 Juli 2026</span></div>
+          <div class="info-row"><span class="info-key">Follow-up Kontrak Baru (H-14)</span><span class="info-val warning">4 Juli 2026</span></div>
           <div class="info-row"><span class="info-key">Window Tagihan Final</span><span class="info-val">45 hari kalender post-akhir</span></div>
           <div class="info-row"><span class="info-key">Platform</span><span class="info-val warning">Belum ada (menunggu VPN)</span></div>
         </div>
@@ -1995,14 +2299,14 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
         </div>
         <div style="margin-top: 1rem">
           <div style="display: flex; justify-content: space-between; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); font-weight: 600; margin-bottom: 6px">
-            <span>15 Apr</span><span style="color: var(--primary)">● 4 Mei</span><span>14 Juli</span>
+            <span>15 Apr</span><span style="color: var(--primary)">● 11 Mei</span><span>18 Juli</span>
           </div>
           <div class="progress-shell" style="height: 10px; position: relative">
-            <div class="progress-fill" style="width: 30.7%"></div>
-            <div style="position: absolute; left: 30.7%; top: -3px; width: 16px; height: 16px; background: var(--primary); border-radius: 50%; transform: translateX(-50%); border: 3px solid var(--bg-card); box-shadow: 0 0 0 2px var(--primary)"></div>
+            <div class="progress-fill" style="width: 38.4%"></div>
+            <div style="position: absolute; left: 38.4%; top: -3px; width: 16px; height: 16px; background: var(--primary); border-radius: 50%; transform: translateX(-50%); border: 3px solid var(--bg-card); box-shadow: 0 0 0 2px var(--primary)"></div>
           </div>
           <div style="text-align: center; font-size: 12px; color: var(--text-2); margin-top: 8px">
-            <strong style="color: var(--primary)">Week 4 / 13</strong> — 30.7% kontrak berjalan
+            <strong style="color: var(--primary)">Week 5 / 13</strong> — 38.4% kontrak berjalan
           </div>
         </div>
         <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border)">
@@ -2013,15 +2317,15 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
             </div>
             <div style="padding: 0.75rem; background: var(--primary-soft); border-radius: 8px; border-left: 3px solid var(--primary)">
               <div style="font-size: 10px; text-transform: uppercase; color: var(--primary-text); font-weight: 700; letter-spacing: 0.05em">Today</div>
-              <div style="font-size: 14px; font-weight: 600; color: var(--text-1); margin-top: 2px">4 Mei 2026</div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--text-1); margin-top: 2px">11 Mei 2026</div>
             </div>
             <div style="padding: 0.75rem; background: var(--warning-soft); border-radius: 8px; border-left: 3px solid var(--warning)">
               <div style="font-size: 10px; text-transform: uppercase; color: var(--warning-text); font-weight: 700; letter-spacing: 0.05em">Follow-up H-14</div>
-              <div style="font-size: 14px; font-weight: 600; color: var(--text-1); margin-top: 2px">30 Juni 2026</div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--text-1); margin-top: 2px">4 Juli 2026</div>
             </div>
             <div style="padding: 0.75rem; background: var(--danger-soft); border-radius: 8px; border-left: 3px solid var(--danger)">
               <div style="font-size: 10px; text-transform: uppercase; color: var(--danger-text); font-weight: 700; letter-spacing: 0.05em">Selesai Kontrak</div>
-              <div style="font-size: 14px; font-weight: 600; color: var(--text-1); margin-top: 2px">14 Juli 2026</div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--text-1); margin-top: 2px">18 Juli 2026</div>
             </div>
           </div>
         </div>
@@ -2200,7 +2504,7 @@ table.problem-table tbody tr:hover { background: var(--bg-soft); }
   <!-- Footer -->
   <div class="report-footer">
     <span>PMO Weekly Report · NTI × DSN Group</span>
-    <span>Generated 4 Mei 2026 · <strong>Luthfi Achmaddin Nizar</strong></span>
+    <span>Generated 11 Mei 2026 · <strong>Luthfi Achmaddin Nizar</strong></span>
     <span>Confidential — Internal Use</span>
   </div>
 
@@ -2244,111 +2548,199 @@ tabBtns.forEach(btn => {
 // ═══════════════ TICKET DATA (full) ═══════════════
 const TICKETS_DATA = [
   {
-    id: 'TSA-001', status: 'resolved', priority: 'high', category: 'technical',
-    desc: "Field 'Industry' required tidak muncul di Master Partner",
-    descFull: "Field 'Industry' required tidak muncul di form Master Data Partner/Kontak",
-    company: 'DSN Group', pic: 'Satria Nusa',
-    sla: '7h', aktual: '1h', variance: '−6', varianceText: '−6 hari',
-    created: '15/04/2026', done: '15/04/2026',
+    id: 'TSA-Init-1-001', status: 'done', priority: 'critical', category: 'technical',
+    desc: 'SMTP server restrict email pengirim non-@dsngroup.co.id',
+    descFull: 'SMTP server DSN merestrict email dari domain selain @dsngroup.co.id',
+    company: 'DSN Group (Koordinasi)', pic: 'Yoga Pratama',
+    sla: '4h', aktual: '3d', variance: '−1', varianceText: '−1 hari (lebih cepat dari target)',
+    created: '15/04/2026', done: '24/04/2026',
     detailLabel: 'Detail & Solusi',
-    detailHtml: "Pada form <code>res.partner</code>, field 'Industry' bersifat required di database namun tidak di-render di view, menyebabkan Save gagal di semua perusahaan DSN Group. Field berhasil ditambahkan kembali ke view form — save kembali normal.",
-    next: 'CR sudah disiapkan, menunggu tanda tangan klien DSN.',
-    est: 1.0,
-  },
-  {
-    id: 'TSA-002', status: 'resolved', priority: 'high', category: 'technical',
-    desc: 'SMTP server restrict email non-@dsngroup.co.id',
-    descFull: 'SMTP server restrict email pengirim non-@dsngroup.co.id',
-    company: 'DSN Group', pic: 'Satria Nusa',
-    sla: '5h', aktual: '4h', variance: '−1', varianceText: '−1 hari',
-    created: '15/04/2026', done: '22/04/2026',
-    detailLabel: 'Detail & Solusi',
-    detailHtml: 'SMTP server menolak email dari domain selain @dsngroup.co.id. Konfigurasi relay di Outgoing Mail Server diubah agar mengizinkan domain NTI saat melakukan pengiriman dari sistem (approval purchase, notifikasi, dll). Email berhasil dikirim normal.',
+    detailHtml: 'Email notifikasi Odoo (approval, reminder, dll) yang dikirim dengan mail from selain domain dsngroup.co.id langsung ditolak/bounce oleh SMTP server. Solusi: setup Google Workspace Admin (allowed senders, allowed IP Odoo server) dan konfigurasi SMTP di Odoo ke smtp-relay.gmail.com port 587 TLS tanpa username/password.',
     next: null,
-    est: 4.0,
-  },
-  {
-    id: 'TSA-003', status: 'progress', priority: 'high', category: 'technical',
-    desc: 'Jurnal alokasi otomatis tidak terbentuk sejak Jan 2026',
-    descFull: 'Jurnal alokasi otomatis tidak terbentuk sejak Januari 2026',
-    company: 'DSN / DSNU', pic: 'Tim Finance DSN',
-    sla: '10h', aktual: '—', variance: 'TBD', varianceText: 'SLA target 10 hari',
-    created: '15/04/2026', done: '—',
-    detailLabel: 'Analisis & Langkah Saat Ini',
-    detailHtml: "Sejak awal 2026, jurnal yang seharusnya terbentuk otomatis (alokasi cost, debet/kredit dari scheduled action) tidak lagi berjalan — tahun 2025 masih normal. Juga terkait temuan di Yayasan DSNU (Palm Oil): Jurnal Alokasi Cost Debet 23920000 OCL tidak terbentuk sejak Jan 2026. Kemungkinan ada di konfigurasi scheduled action / cron <code>ir.cron</code> di level aplikasi, bukan source code custom. Estimasi: 3 hari dev + 2 hari UAT.",
-    next: 'Cek konfigurasi cron Auto-post Journal Entries di Accounting Settings, lalu UAT pembentukan jurnal otomatis 2026.',
-    est: 5.5,
-  },
-  {
-    id: 'TSA-004', status: 'progress', priority: 'high', category: 'technical',
-    desc: 'RPC error approval retur Kanban — datetime concat bug',
-    descFull: 'RPC error approval retur Kanban — datetime concat bug',
-    company: 'PT Panyindangan', pic: 'Tim Operasional Panyindangan',
-    sla: '7h', aktual: '—', variance: 'TBD', varianceText: 'SLA target 7 hari',
-    created: '29/04/2026', done: '—',
-    detailLabel: 'Detail & Solusi',
-    detailHtml: 'Bug di <code>x_dynamic_approval/models/stock_picking.py:273</code> — concat string dengan datetime gagal. Fix: pakai <code>datetime.combine()</code> sebelum concat. Code sudah siap di branch fix-stock-picking-approval, sedang menunggu deploy ke staging untuk validasi.',
-    next: 'Deploy fix ke staging DSN, test alur approval retur penuh, lalu push ke production.',
-    est: 4.5,
-  },
-  {
-    id: 'TSA-005', status: 'resolved', priority: 'medium', category: 'functional',
-    desc: 'Nomor Vendor Bill prefix DCV+I, seharusnya BILL',
-    descFull: 'Nomor Vendor Bill prefix DCV+I, seharusnya BILL',
-    company: 'PT DPP Corn', pic: 'Finance DPP Corn',
-    sla: '7h', aktual: '1h', variance: '−6', varianceText: '−6 hari',
-    created: '28/04/2026', done: '28/04/2026',
-    detailLabel: 'Detail & Solusi',
-    detailHtml: 'Sequence pada Journal Vendor Bill memakai prefix lama (DCV+I) padahal seharusnya BILL+tahun. Field <code>sequence_for_journal</code> diperbarui ke prefix BILL — nomor baru dari ID berikutnya sudah benar.',
-    next: null,
-    est: 1.0,
-  },
-  {
-    id: 'TSA-006', status: 'resolved', priority: 'high', category: 'technical',
-    desc: 'Error vendor bill dari multiple PO — Singleton ValueError',
-    descFull: 'Error vendor billing dari multiple PO — Singleton ValueError',
-    company: 'PT DPP Corn', pic: 'Finance DPP Corn',
-    sla: '3h', aktual: '1h', variance: '−2', varianceText: '−2 hari',
-    created: '29/04/2026', done: '29/04/2026',
-    detailLabel: 'Detail & Solusi',
-    detailHtml: 'Saat membuat Vendor Bill dari banyak PO sekaligus, sistem memanggil method yang expect single record sehingga muncul Singleton ValueError. Logic looping diperbaiki untuk handle recordset (multi-record), tidak lagi error.',
-    next: null,
-    est: 1.0,
-  },
-  {
-    id: 'TSA-007', status: 'resolved', priority: 'medium', category: 'functional',
-    desc: 'Error register payment petty cash — journal kosong',
-    descFull: 'Error register payment petty cash — journal kosong',
-    company: 'DPP + PUL', pic: 'Indah, Lisa (DPP+PUL)',
-    sla: '3h', aktual: '1h', variance: '−2', varianceText: '−2 hari',
-    created: '07/05/2026', done: '08/05/2026',
-    detailLabel: 'Detail & Solusi',
-    detailHtml: "Saat register payment dari Bill petty cash, validasi gagal karena field 'Journal' kosong. Journal default ditambahkan di config Petty Cash; user diberi panduan untuk pilih Journal saat input baru.",
-    next: 'Edukasi user di kedua entitas; pertimbangkan default journal otomatis untuk modul petty cash di v3.',
     est: 2.0,
   },
   {
-    id: 'TSA-008', status: 'open', priority: 'high', category: 'technical',
-    desc: 'Contra account Ha Management tidak terbaca (GL 513/521)',
-    descFull: 'Contra account Ha Management tidak terbaca (GL 513/521)',
-    company: 'PT PUL Palm Oil', pic: 'Andry Susanto (PT PUL)',
-    sla: '7h', aktual: '—', variance: '—', varianceText: 'SLA target 7 hari',
-    created: '07/05/2026', done: '—',
+    id: 'TSA-Init-2-002', status: 'done', priority: 'medium', category: 'technical',
+    desc: "Field 'Industry' required tidak muncul di form Master Partner",
+    descFull: "Field 'Industry' required tidak muncul di form Master Data Partner/Kontak",
+    company: 'DSN Group (Koordinasi)', pic: 'Satria Nusa',
+    sla: '1h', aktual: '1d', variance: '0', varianceText: 'Sesuai target SLA',
+    created: '15/04/2026', done: '15/04/2026',
     detailLabel: 'Detail & Solusi',
-    detailHtml: 'GL 51311402 (GS WAREHOUSING) &amp; 52112204 (GS HO TAXES LIC) tidak terbaca saat alokasi di modul Hectar Management. Perlu validasi konfigurasi account group &amp; allocation rule untuk PT PUL Palm Oil.',
-    next: 'Cek konfig account group &amp; allocation rule. ETA penyelesaian: 14 Mei 2026.',
-    est: 4.0,
+    detailHtml: "Pada form <code>res.partner</code>, field 'Industry' bersifat required di DB namun tidak di-render di view. Ubah attribute melalui mode debug, edit view form — langsung dieksekusi oleh tim DSN. Solved dalam 1 hari.",
+    next: null,
+    est: 1.0,
+  },
+  {
+    id: 'TSA-Banana-01-003', status: 'ready-test-user', priority: 'medium', category: 'technical',
+    desc: 'Error Approval Retur Kanban — RPC_ERROR datetime unconverted data',
+    descFull: 'Error saat Approval Retur di Kanban (RPC_ERROR datetime unconverted data)',
+    company: 'PT Panyindangan (Kanban)', pic: 'Anggi Setyawan',
+    sla: '1h', aktual: '1d', variance: '0', varianceText: 'SLA target 1 hari',
+    created: '30/04/2026', done: '—',
+    detailLabel: 'Analisis & Status',
+    detailHtml: 'Error di <code>x_dynamic_approval/models/stock_picking.py:273</code> — string concat dengan microsecond di akhir. Fix: ganti dengan <code>datetime.combine(self.accounting_date_po, date_approved.time())</code>. Fix sudah deploy ke staging, pending push ke production.',
+    next: 'Push fix ke production setelah staging OK.',
+    est: 3.0,
+  },
+  {
+    id: 'TSA-Corn-01-004', status: 'ready-execute-dsn', priority: 'low', category: 'functional',
+    desc: 'Nomor Vendor Bill salah — prefix BILL menjadi DCV + huruf I di akhir',
+    descFull: 'Nomor dokumen Vendor Bill salah — prefix BILL menjadi DCV + huruf I di akhir',
+    company: 'PT DPP (Corn)', pic: 'Cia',
+    sla: '3h', aktual: '1d', variance: '−2', varianceText: '−2 hari (lebih cepat)',
+    created: '30/04/2026', done: '—',
+    detailLabel: 'Solusi',
+    detailHtml: 'Ubah Prefix dan Sufix di Journal Sequence Vendor Bill. Solusi akhir: buat transaksi, set to Draft, ubah sequence sesuai yang diinginkan. Perlu konfirmasi ke Lulu apakah transaksi lama perlu diupdate juga.',
+    next: 'Execute di DSN — menunggu konfirmasi user.',
+    est: 2.0,
+  },
+  {
+    id: 'TSA-Corn-02-005', status: 'ready-execute-dsn', priority: 'high', category: 'technical',
+    desc: 'Error vendor bill dari multiple PO — ValueError: Expected singleton',
+    descFull: 'Error saat membuat vendor bill dari multiple PO sekaligus (ValueError: Expected singleton)',
+    company: 'PT DPP (Corn)', pic: 'Lulu (Adm-Prod-Corn)',
+    sla: '3h', aktual: '1d', variance: '−2', varianceText: '−2 hari (lebih cepat)',
+    created: '30/04/2026', done: '—',
+    detailLabel: 'Solusi',
+    detailHtml: 'Ganti <code>self.date_planned</code> dengan <code>self.mapped("date_planned")</code>. Gunakan <code>max()</code> untuk mengambil tanggal terjauh dari semua PO yang digabung. Code sudah di-push di branch NTI.',
+    next: 'Deploy & test dengan 2+ PO dari vendor yang sama. Verifikasi invoice_date sesuai.',
+    est: 1.0,
+  },
+  {
+    id: 'TSA-Corn-03-006', status: 'ready-execute-dsn', priority: 'medium', category: 'technical',
+    desc: "Penambahan informasi 'Code PO' pada report PDF DO",
+    descFull: "Penambahan informasi 'Code PO' pada report PDF Delivery Order",
+    company: 'PT DPP (Corn)', pic: 'Suhar (Adm-Prod-Corn)',
+    sla: '7h', aktual: '—', variance: 'TBD', varianceText: 'ETA: 14 Mei 2026',
+    created: '30/04/2026', done: '—',
+    detailLabel: 'Solusi',
+    detailHtml: 'Buat field baru <code>po_code</code> type char di SO dan DO, beri akses groups (hanya user DPP). Custom confirm button agar PO Code terbawa ke stock picking (DO). Custom xml_id <code>report_picking_extension</code> — tampilkan Kode PO jika field ada value. Code sudah di-push di branch NTI.',
+    next: 'Butuh konfirmasi apakah OK pakai field baru, lalu execute di DSN.',
+    est: 3.0,
+  },
+  {
+    id: 'TSA-Corn-04-007', status: 'done', priority: 'high', category: 'functional',
+    desc: 'PO tidak bisa invoicing — error sudah lock period',
+    descFull: 'PO tidak bisa diproses invoicing — notifikasi error sudah lock period',
+    company: 'PT DPP (Corn)', pic: 'Lulu (Adm-Prod-Corn)',
+    sla: '4h', aktual: '—', variance: '—', varianceText: 'Resolved 07/05/2026',
+    created: '30/04/2026', done: '07/05/2026',
+    detailLabel: 'Solusi',
+    detailHtml: 'Akar masalah: error lock period bukan dari proses invoicing-nya, melainkan dari TANGGAL akuntansi (account.move.date) yang dipakai untuk journal entry. Custom module memaksa pakai tanggal lama PO, bukan tanggal hari ini. Bill sudah posted saat dicek 07/05/2026.',
+    next: null,
+    est: 3.0,
+  },
+  {
+    id: 'TSA-Oil-01-012', status: 'done', priority: 'high', category: 'functional',
+    desc: 'Jurnal alokasi otomatis tidak terbentuk sejak Januari 2026',
+    descFull: 'Jurnal alokasi otomatis (automation journal item) tidak terbentuk sejak Januari 2026',
+    company: 'Yayasan DSNU', pic: 'Indra Novitasari',
+    sla: '10h', aktual: '10d', variance: '0', varianceText: 'Sesuai target SLA',
+    created: '30/04/2026', done: '11/05/2026',
+    detailLabel: 'Root Cause & Solusi',
+    detailHtml: 'Penyebab: <code>date_stop</code> di transfer model di-set ke akhir 2025 sehingga kondisi <code>while next_move_date &lt;= max_date</code> tidak iterasi ke 2026. Solusi cepat: buka transfer model yang bermasalah, kosongkan Stop Date (atau set ke 31/12/2030), save, klik "Compute Transfer". Move untuk Januari 2026 dst langsung muncul sebagai draft. ✅ Resolved hari ini 11 Mei 2026.',
+    next: null,
+    est: 12.0,
+  },
+  {
+    id: 'TSA-Oil-03-013', status: 'ready-execute-dsn', priority: 'medium', category: 'technical',
+    desc: 'Internal Control untuk Unreleased PO (approval flow)',
+    descFull: 'Internal Control Untuk Unreleased PO — tambah approval flow',
+    company: 'PT PUL & All Business Segment', pic: 'Ali Mustakiim (Head of Procurement)',
+    sla: '10h', aktual: '—', variance: 'TBD', varianceText: 'Pending konfirmasi user',
+    created: '30/04/2026', done: '—',
+    detailLabel: 'Detail & Rencana',
+    detailHtml: 'Default Odoo hanya memiliki klik "Revise" dari user yang membuat PO — tidak ada flow approval untuk unrelease. Permintaan dari Pak Ali: ditambahkan approval flow dengan popup wizard reason. Rombak coding dynamic approval, beri pop-up wizard reason juga.',
+    next: 'Konfirmasi user apakah OK dengan solusi yang diusulkan.',
+    est: 16.0,
+  },
+  {
+    id: 'TSA-Oil-04-014', status: 'request', priority: 'medium', category: 'technical',
+    desc: 'Stock movement scrap/cancel GR PO tidak mengikuti tanggal transaksi',
+    descFull: 'Pada dokumen scrap/cancel GR PO, movement stock belum bisa mengikuti tanggal transaksi',
+    company: 'PT PULL', pic: 'Andry Susanto (Accounting JKT)',
+    sla: '10h', aktual: '—', variance: '—', varianceText: 'Menunggu detail dari user',
+    created: '30/04/2026', done: '—',
+    detailLabel: 'Status',
+    detailHtml: 'By default movement stock mengikuti tanggal posting sehingga pada report movement stock tidak matching dengan accounting date. Detail lengkap dari user masih perlu dikonfirmasi ulang — akan di-follow up.',
+    next: 'Konfirmasi ke user untuk detail issue seperti apa.',
+    est: 8.0,
+  },
+  {
+    id: 'TSA-Oil-05-015', status: 'progress-nti', priority: 'medium', category: 'functional',
+    desc: 'Error saat register payment — inbound dan outbound bersamaan',
+    descFull: "Muncul error pada saat register payment — You Can't register payments for both inbound and outbound moves",
+    company: 'PT PULL', pic: 'Lisa (Finance Site)',
+    sla: '4h', aktual: '—', variance: 'TBD', varianceText: 'On Progress NTI',
+    created: '30/04/2026', done: '—',
+    detailLabel: 'Analisis',
+    detailHtml: 'Perlu check akun di Journal Items-nya — kemungkinan isinya akun AR tapi untuk transaksi AP. Analisis sedang berjalan.',
+    next: 'Check akun di Journal Items, identifikasi penyebab campuran AR/AP.',
+    est: 3.0,
+  },
+  {
+    id: 'TSA-Oil-06-016', status: 'done', priority: 'critical', category: 'technical',
+    desc: 'Proses alokasi Ha Management — jurnal tidak tertarik (GL duplikat)',
+    descFull: 'Proses alokasi (Hectare Management) terdapat jurnal yang tidak tertarik — GL duplikat',
+    company: 'PT PUL', pic: 'Andry Susanto (Accounting JKT)',
+    sla: '2h', aktual: '—', variance: '—', varianceText: 'Resolved 07/05/2026',
+    created: '30/04/2026', done: '07/05/2026',
+    detailLabel: 'Root Cause & Solusi',
+    detailHtml: 'Masalah utama ada di <code>cost_distribution_line_id</code> di account.move.line yang sudah memiliki value dari jurnal yang di-duplicate. Ditemukan 100 transaksi AML dengan cost_distribution_line_id ganda. Solusi: dikosongkan cost_distribution_line_id yang duplicate menggunakan query, lalu buat transaksi alokasi ulang. Permanent fix: field diberi parameter <code>copy=False</code>.',
+    next: null,
+    est: 7.0,
+  },
+  {
+    id: 'TSA-IC-01-017', status: 'ready-execute-dsn', priority: 'medium', category: 'functional',
+    desc: 'Dokumentasi pembuatan company baru (step by step)',
+    descFull: 'Dokumentasi pembuatan company baru — panduan step by step untuk user DSN',
+    company: 'PT Dharma Sentosa Nugraha & PT Dharma Anugraha Sejati', pic: 'Dwika',
+    sla: '10h', aktual: '—', variance: 'TBD', varianceText: 'Ready to Execute DSN',
+    created: '30/04/2026', done: '—',
+    detailLabel: 'Status',
+    detailHtml: 'Pembuatan PT baru pihak DSN harap bisa didampingi. Dokumen step by step sudah dibuat oleh NTI. Ready to Execute DSN — tinggal mendampingi tim DSN untuk membuat company baru.',
+    next: 'Mendampingi tim DSN untuk membuat company baru.',
+    est: 13.0,
   },
 ];
-
 // ═══════════════ TICKET TABLE RENDER + FILTERS ═══════════════
-const STATUS_LABELS = { all: 'Tiket Aktif Minggu Ini', resolved: 'Tiket Resolved', progress: 'Tiket In Progress / On-Going', open: 'Tiket Open' };
-const STATUS_PILL = { resolved: 'pill-success', progress: 'pill-info', open: 'pill-danger' };
-const STATUS_TEXT = { resolved: 'Resolved', progress: t => t.id === 'TSA-004' ? 'On-Going' : 'In Progress', open: 'Open' };
-const PRI_PILL = { high: 'pill-danger', medium: 'pill-warning' };
-const PRI_TEXT = { high: 'High', medium: 'Medium' };
-const CAT_PILL = { technical: 'pill-purple', functional: 'pill-info' };
-const CAT_TEXT = { technical: 'Technical', functional: 'Functional' };
+const STATUS_LABELS = {
+  all: 'Tiket Aktif Minggu Ini',
+  'request': 'Tiket Request (Open)',
+  'progress-nti': 'Tiket On Progress NTI',
+  'ready-execute-dsn': 'Tiket Ready to Execute DSN',
+  'progress-dsn': 'Tiket On Progress DSN',
+  'ready-test-user': 'Tiket Ready to Test User',
+  'done': 'Tiket Done',
+  'revision': 'Tiket Revision',
+};
+const STATUS_PILL = {
+  'request': 'pill-danger',
+  'progress-nti': 'pill-primary',
+  'ready-execute-dsn': 'pill-warning',
+  'progress-dsn': 'pill-info',
+  'ready-test-user': 'pill-purple',
+  'done': 'pill-success',
+  'revision': 'pill-danger',
+};
+const STATUS_TEXT = {
+  'request': 'Request',
+  'progress-nti': 'On Progress NTI',
+  'ready-execute-dsn': 'Ready to Execute DSN',
+  'progress-dsn': 'On Progress DSN',
+  'ready-test-user': 'Ready to Test User',
+  'done': 'Done',
+  'revision': 'Revision',
+};
+// Helper: is ticket still active (not Done)?
+const isActive = t => t.status !== 'done';
+// Helper: has NTI side completed (≥ Ready to Execute DSN)?
+const isNtiSideDone = t => ['ready-execute-dsn', 'progress-dsn', 'ready-test-user', 'done'].includes(t.status);
+const PRI_PILL = { critical: 'pill-danger', high: 'pill-danger', medium: 'pill-warning', low: 'pill-info' };
+const PRI_TEXT = { critical: 'Critical', high: 'High', medium: 'Medium', low: 'Low' };
+const CAT_PILL = { technical: 'pill-purple', functional: 'pill-info', information: 'pill-warning' };
+const CAT_TEXT = { technical: 'Technical', functional: 'Functional', information: 'Information' };
 
 const filterState = { status: 'all', priority: 'all', category: 'all', search: '' };
 const expandedTickets = new Set();
@@ -2363,8 +2755,7 @@ const resetBtn = document.getElementById('resetFilters');
 const ticketEmpty = document.getElementById('ticketEmpty');
 
 function statusText(t) {
-  const v = STATUS_TEXT[t.status];
-  return typeof v === 'function' ? v(t) : v;
+  return STATUS_TEXT[t.status] || t.status;
 }
 
 function varClass(v) {
@@ -2493,11 +2884,11 @@ function renderDashTable(filter) {
   const label = document.getElementById('dashTableLabel');
   let rows = TICKETS_DATA;
   if (filter === 'all') {
-    rows = TICKETS_DATA.filter(t => t.status !== 'resolved' || ['TSA-007'].includes(t.id));
-    label.textContent = 'Tiket Aktif Minggu Ini (Week 4)';
+    rows = TICKETS_DATA.filter(t => t.status !== 'done');
+    label.textContent = 'Tiket Aktif (Belum Done) — Week 5';
   } else {
     rows = TICKETS_DATA.filter(t => t.status === filter);
-    label.textContent = STATUS_LABELS[filter];
+    label.textContent = STATUS_LABELS[filter] || 'Tiket';
   }
   body.innerHTML = rows.map(t => `
     <tr>
@@ -2521,107 +2912,114 @@ document.querySelectorAll('.kpi-card.clickable[data-filter-status]').forEach(car
 // ═══════════════ PROBLEM TRACKER ═══════════════
 const PROBLEMS_DATA = [
   {
+    no: 1, severity: 'medium',
     desc: "Field 'Industry' required tidak muncul di form Master Partner",
     problemTime: '15/04/2026 09:15', responseTime: '15/04/2026 09:25', maxResponse: '0:10',
-    restorationTime: '15/04/2026 11:30', restorationAction: 'Patch view definition (XML override)',
-    resolutionTime: '15/04/2026 14:30', deltaRes: '5:15',
-    resolutionAction: 'Field re-render & validasi save di semua entitas',
-    requestor: 'Satria Nusa', engineer: 'Luthfi A. Nizar', status: 'closed',
+    resolutionTime: '15/04/2026 14:30',
+    resolutionAction: 'Ubah attribute via mode debug, edit view form res.partner',
+    requestor: 'Satria Nusa', status: 'closed',
   },
   {
+    no: 2, severity: 'critical',
     desc: 'SMTP relay menolak email pengirim non-@dsngroup.co.id',
     problemTime: '15/04/2026 13:40', responseTime: '15/04/2026 14:15', maxResponse: '0:35',
-    restorationTime: '20/04/2026 16:00', restorationAction: 'Bypass SMTP via internal queue',
-    resolutionTime: '22/04/2026 11:20', deltaRes: '6d 21:40',
-    resolutionAction: 'Re-config Outgoing Mail Server allow list domain NTI',
-    requestor: 'Satria Nusa', engineer: 'Luthfi A. Nizar', status: 'closed',
+    resolutionTime: '24/04/2026 11:20',
+    resolutionAction: 'Re-config SMTP Google Workspace + Odoo Outgoing Mail Server',
+    requestor: 'Yoga Pratama', status: 'closed',
   },
   {
-    desc: 'Investigasi awal jurnal otomatis tidak terbentuk sejak Jan 2026',
-    problemTime: '20/04/2026 10:00', responseTime: '20/04/2026 10:45', maxResponse: '0:45',
-    restorationTime: '—', restorationAction: 'Workaround manual journal entry',
-    resolutionTime: '—', deltaRes: 'TBD',
-    resolutionAction: 'Pending — verifikasi cron Auto-post Journal',
-    requestor: 'Tim Finance DSN', engineer: 'Luthfi A. Nizar', status: 'in-progress',
+    no: 3, severity: 'medium',
+    desc: 'RPC error approval retur Kanban — datetime concat bug (microsecond)',
+    problemTime: '30/04/2026 14:00', responseTime: '30/04/2026 14:20', maxResponse: '0:20',
+    resolutionTime: '—',
+    resolutionAction: 'Pending — fix datetime.combine() di staging, push ke prod setelah validasi',
+    requestor: 'Anggi Setyawan (PT Panyindangan)', status: 'in-progress',
   },
   {
-    desc: 'Spreadsheet DSN — fixing batch issue export/import (batch 1)',
-    problemTime: '27/04/2026 09:30', responseTime: '27/04/2026 09:35', maxResponse: '0:05',
-    restorationTime: '27/04/2026 11:00', restorationAction: 'Konversi UTF-8 → ANSI script',
-    resolutionTime: '27/04/2026 16:45', deltaRes: '7:15',
-    resolutionAction: 'Send fixed CSV ke Tim DSN',
-    requestor: 'Tim Finance DSN', engineer: 'Luthfi A. Nizar', status: 'closed',
-  },
-  {
+    no: 4, severity: 'low',
     desc: 'Vendor Bill prefix DCV+I — sequence salah, harusnya BILL',
-    problemTime: '28/04/2026 10:20', responseTime: '28/04/2026 10:30', maxResponse: '0:10',
-    restorationTime: '28/04/2026 11:00', restorationAction: 'Manual override sequence di Journal',
-    resolutionTime: '28/04/2026 14:30', deltaRes: '4:10',
-    resolutionAction: 'Update field sequence_for_journal ke prefix BILL',
-    requestor: 'Finance DPP Corn', engineer: 'Luthfi A. Nizar', status: 'closed',
+    problemTime: '30/04/2026 10:20', responseTime: '30/04/2026 10:30', maxResponse: '0:10',
+    resolutionTime: '—',
+    resolutionAction: 'Pending execute — ubah sequence Journal Vendor Bill, konfirmasi ke user',
+    requestor: 'Cia (PT DPP Corn)', status: 'in-progress',
   },
   {
+    no: 5, severity: 'high',
     desc: 'Singleton ValueError saat create Vendor Bill dari multiple PO',
-    problemTime: '29/04/2026 08:45', responseTime: '29/04/2026 08:50', maxResponse: '0:05',
-    restorationTime: '29/04/2026 09:30', restorationAction: 'Bypass — bill per PO satuan',
-    resolutionTime: '29/04/2026 12:15', deltaRes: '3:30',
-    resolutionAction: 'Refactor logic ke recordset (multi-record handling)',
-    requestor: 'Finance DPP Corn', engineer: 'Luthfi A. Nizar', status: 'closed',
+    problemTime: '30/04/2026 08:45', responseTime: '30/04/2026 08:50', maxResponse: '0:05',
+    resolutionTime: '—',
+    resolutionAction: 'Pending deploy — ganti self.date_planned dengan self.mapped() + max()',
+    requestor: 'Lulu (PT DPP Corn)', status: 'in-progress',
   },
   {
-    desc: 'RPC error approval retur Kanban — datetime concat bug',
-    problemTime: '29/04/2026 14:00', responseTime: '29/04/2026 14:20', maxResponse: '0:20',
-    restorationTime: '05/05/2026 10:00', restorationAction: 'Hotfix datetime.combine() di staging',
-    resolutionTime: '—', deltaRes: 'TBD',
-    resolutionAction: 'Pending push fix ke production setelah validasi staging',
-    requestor: 'Tim Operasional Panyindangan', engineer: 'Luthfi A. Nizar', status: 'in-progress',
+    no: 6, severity: 'medium',
+    desc: "Penambahan 'Code PO' pada report PDF DO — field baru po_code",
+    problemTime: '30/04/2026 09:00', responseTime: '05/05/2026 09:00', maxResponse: '5d',
+    resolutionTime: '—',
+    resolutionAction: 'Pending konfirmasi — code sudah ready di branch NTI, ETA deploy 14/05',
+    requestor: 'Suhar (PT DPP Corn)', status: 'in-progress',
   },
   {
-    desc: 'Spreadsheet DSN — fixing batch issue analisis cost (batch 2)',
-    problemTime: '28/04/2026 10:00', responseTime: '28/04/2026 10:10', maxResponse: '0:10',
-    restorationTime: '28/04/2026 13:00', restorationAction: 'Re-process file dengan filter benar',
-    resolutionTime: '28/04/2026 16:30', deltaRes: '6:30',
-    resolutionAction: 'Send report ke Tim DSN',
-    requestor: 'Tim Finance DSN', engineer: 'Luthfi A. Nizar', status: 'closed',
+    no: 7, severity: 'high',
+    desc: 'PO tidak bisa invoicing — error lock period accounting date',
+    problemTime: '30/04/2026 11:00', responseTime: '05/05/2026 10:00', maxResponse: '5d',
+    resolutionTime: '07/05/2026 14:00',
+    resolutionAction: 'Konfirmasi ke user — bill sudah posted, resolved',
+    requestor: 'Lulu (PT DPP Corn)', status: 'closed',
   },
   {
-    desc: 'Verifikasi cron ir.cron Auto-post Journal — Week 4',
-    problemTime: '04/05/2026 09:00', responseTime: '04/05/2026 09:10', maxResponse: '0:10',
-    restorationTime: '—', restorationAction: 'Pending — analisis berjalan',
-    resolutionTime: '—', deltaRes: 'TBD',
-    resolutionAction: 'Pending UAT pembentukan jurnal otomatis',
-    requestor: 'Tim Finance DSN', engineer: 'Luthfi A. Nizar', status: 'in-progress',
+    no: 8, severity: 'high',
+    desc: 'Jurnal alokasi otomatis tidak terbentuk sejak Januari 2026 — Yayasan DSNU',
+    problemTime: '30/04/2026 10:00', responseTime: '05/05/2026 09:00', maxResponse: '5d',
+    resolutionTime: '11/05/2026 10:00',
+    resolutionAction: 'Kosongkan date_stop transfer model + Compute Transfer — jurnal Jan 2026 dst muncul',
+    requestor: 'Indra Novitasari (Yayasan DSNU)', status: 'closed',
   },
   {
-    desc: 'Petty cash payment — field Journal kosong saat register',
-    problemTime: '07/05/2026 10:30', responseTime: '07/05/2026 10:40', maxResponse: '0:10',
-    restorationTime: '07/05/2026 11:30', restorationAction: 'User pilih Journal manual saat input',
-    resolutionTime: '08/05/2026 14:00', deltaRes: '1d 3:30',
-    resolutionAction: 'Set default Journal di config Petty Cash + edukasi user',
-    requestor: 'Indah, Lisa (DPP+PUL)', engineer: 'Luthfi A. Nizar', status: 'closed',
+    no: 9, severity: 'medium',
+    desc: 'Internal Control Unreleased PO — perlu approval flow (PT PUL)',
+    problemTime: '30/04/2026 09:30', responseTime: '07/05/2026 09:00', maxResponse: '7d',
+    resolutionTime: '—',
+    resolutionAction: 'Pending konfirmasi user — rombak dynamic approval dengan wizard reason',
+    requestor: 'Ali Mustakiim (PT PUL)', status: 'in-progress',
   },
   {
-    desc: 'Contra account Ha Mgmt GL 51311402 / 52112204 tidak terbaca',
-    problemTime: '07/05/2026 13:15', responseTime: '07/05/2026 14:00', maxResponse: '0:45',
-    restorationTime: '—', restorationAction: 'Workaround manual posting per allocation',
-    resolutionTime: '—', deltaRes: 'TBD',
-    resolutionAction: 'Pending — cek konfig account group & allocation rule',
-    requestor: 'Andry Susanto (PT PUL)', engineer: 'Luthfi A. Nizar', status: 'open',
+    no: 10, severity: 'medium',
+    desc: 'Stock movement scrap/cancel GR PO tidak mengikuti tanggal transaksi',
+    problemTime: '30/04/2026 10:00', responseTime: '—', maxResponse: '—',
+    resolutionTime: '—',
+    resolutionAction: 'Pending — detail issue perlu dikonfirmasi ulang ke user',
+    requestor: 'Andry Susanto (PT PULL)', status: 'open',
   },
   {
-    desc: 'Yayasan DSNU — Jurnal Alokasi Cost Debet 23920000 OCL tidak terbentuk',
-    problemTime: '02/05/2026 11:00', responseTime: '02/05/2026 11:15', maxResponse: '0:15',
-    restorationTime: '—', restorationAction: 'Manual posting jurnal alokasi',
-    resolutionTime: '—', deltaRes: 'TBD',
-    resolutionAction: 'Pending — terkait root cause TSA-003',
-    requestor: 'Tim Finance DSNU', engineer: 'Luthfi A. Nizar', status: 'in-progress',
+    no: 11, severity: 'medium',
+    desc: "Error register payment — inbound dan outbound moves bersamaan",
+    problemTime: '30/04/2026 09:00', responseTime: '08/05/2026 10:00', maxResponse: '8d',
+    resolutionTime: '—',
+    resolutionAction: 'On Progress NTI — check akun AR/AP di Journal Items',
+    requestor: 'Lisa (PT PULL Finance Site)', status: 'in-progress',
+  },
+  {
+    no: 12, severity: 'critical',
+    desc: 'Alokasi Ha Management — GL 51311402 & 52112204 tidak tertarik (duplikat)',
+    problemTime: '30/04/2026 09:00', responseTime: '05/05/2026 09:00', maxResponse: '5d',
+    resolutionTime: '07/05/2026 16:00',
+    resolutionAction: 'Clear cost_distribution_line_id duplikat via query, alokasi ulang, copy=False permanent fix',
+    requestor: 'Andry Susanto (PT PUL)', status: 'closed',
+  },
+  {
+    no: 13, severity: 'medium',
+    desc: 'Dokumentasi pembuatan company baru — step by step guide',
+    problemTime: '30/04/2026 09:00', responseTime: '07/05/2026 09:00', maxResponse: '7d',
+    resolutionTime: '—',
+    resolutionAction: 'Dokumen siap — tunggu jadwal pendampingan pembuatan company baru',
+    requestor: 'Dwika (PT Dharma)', status: 'in-progress',
   },
 ];
-
 const STATUS_PROBLEM_PILL = { closed: 'pill-success', 'in-progress': 'pill-info', open: 'pill-danger' };
 const STATUS_PROBLEM_TEXT = { closed: 'Closed', 'in-progress': 'In Progress', open: 'Open' };
 
-const problemState = { status: 'all', engineer: 'all', search: '' };
+const problemState = { status: 'all', severity: 'all', search: '' };
 
 function maxResponseClass(mr) {
   if (!mr || mr === '—') return 'duration-na';
@@ -2640,20 +3038,21 @@ function timeOrNa(v) {
   return v && v !== '—' ? `<span class="time-cell">${v}</span>` : '<span class="duration-na">—</span>';
 }
 
+const SEV_PILL = { critical: 'pill-danger', high: 'pill-warning', medium: 'pill-info', low: 'pill-purple', information: 'pill-gray' };
+const SEV_TEXT = { critical: 'Critical', high: 'High', medium: 'Medium', low: 'Low', information: 'Info' };
+
 function problemRowHtml(p) {
   return `
-    <tr data-status="${p.status}" data-engineer="${p.engineer.toLowerCase().includes('luthfi') ? 'luthfi' : 'dev-nti'}">
+    <tr data-status="${p.status}" data-severity="${p.severity}">
+      <td style="text-align: center; font-size: 11px; color: var(--text-3)">${p.no}</td>
       <td class="wrap">${p.desc}</td>
       <td><span class="time-cell">${p.problemTime}</span></td>
       <td>${timeOrNa(p.responseTime)}</td>
       <td><span class="${maxResponseClass(p.maxResponse)}">${p.maxResponse}</span></td>
-      <td>${timeOrNa(p.restorationTime)}</td>
-      <td class="wrap" style="font-size: 11.5px; color: var(--text-2)">${p.restorationAction}</td>
+      <td><span class="pill ${SEV_PILL[p.severity] || 'pill-gray'} no-dot">${SEV_TEXT[p.severity] || p.severity}</span></td>
       <td>${timeOrNa(p.resolutionTime)}</td>
-      <td><span class="${deltaClass(p.deltaRes)}">${p.deltaRes}</span></td>
       <td class="wrap" style="font-size: 11.5px; color: var(--text-2)">${p.resolutionAction}</td>
       <td style="font-size: 11.5px">${p.requestor}</td>
-      <td style="font-size: 11.5px">${p.engineer}</td>
       <td><span class="pill ${STATUS_PROBLEM_PILL[p.status]}">${STATUS_PROBLEM_TEXT[p.status]}</span></td>
     </tr>
   `;
@@ -2661,7 +3060,6 @@ function problemRowHtml(p) {
 
 const problemTableBody = document.getElementById('problemTableBody');
 const problemStatusSel = document.getElementById('problemStatus');
-const problemEngineerSel = document.getElementById('problemEngineer');
 const problemSearchInput = document.getElementById('problemSearch');
 const problemResults = document.getElementById('problemResults');
 const resetProblemBtn = document.getElementById('resetProblemFilters');
@@ -2669,10 +3067,9 @@ const problemEmpty = document.getElementById('problemEmpty');
 
 function matchesProblem(p) {
   if (problemState.status !== 'all' && p.status !== problemState.status) return false;
-  const engineerKey = p.engineer.toLowerCase().includes('luthfi') ? 'luthfi' : 'dev-nti';
-  if (problemState.engineer !== 'all' && engineerKey !== problemState.engineer) return false;
+  if (problemState.severity !== 'all' && p.severity !== problemState.severity) return false;
   if (problemState.search) {
-    const hay = `${p.desc} ${p.requestor} ${p.engineer} ${p.restorationAction} ${p.resolutionAction}`.toLowerCase();
+    const hay = `${p.desc} ${p.requestor} ${p.resolutionAction}`.toLowerCase();
     if (!hay.includes(problemState.search)) return false;
   }
   return true;
@@ -2685,15 +3082,16 @@ function renderProblemTable() {
   problemEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
 }
 
+const problemSeveritySel = document.getElementById('problemSeverity');
 problemStatusSel.addEventListener('change', e => { problemState.status = e.target.value; renderProblemTable(); });
-problemEngineerSel.addEventListener('change', e => { problemState.engineer = e.target.value; renderProblemTable(); });
+if (problemSeveritySel) problemSeveritySel.addEventListener('change', e => { problemState.severity = e.target.value; renderProblemTable(); });
 problemSearchInput.addEventListener('input', e => { problemState.search = e.target.value.toLowerCase().trim(); renderProblemTable(); });
 resetProblemBtn.addEventListener('click', () => {
   problemState.status = 'all';
-  problemState.engineer = 'all';
+  problemState.severity = 'all';
   problemState.search = '';
   problemStatusSel.value = 'all';
-  problemEngineerSel.value = 'all';
+  if (problemSeveritySel) problemSeveritySel.value = 'all';
   problemSearchInput.value = '';
   renderProblemTable();
 });
@@ -2729,14 +3127,19 @@ function rebuildCharts() {
   Chart.defaults.font.size = 12;
   Chart.defaults.color = C.text2;
 
-  // Status doughnut - clickable
+  // Status doughnut - 7 stages, clickable
+  const stageKeys = ['request', 'progress-nti', 'ready-execute-dsn', 'progress-dsn', 'ready-test-user', 'done', 'revision'];
+  const stageLabels = ['Request', 'On Progress NTI', 'Ready Exec DSN', 'On Progress DSN', 'Ready Test User', 'Done', 'Revision'];
+  const stageColors = [C.danger, C.primary, C.warning, C.info, C.purple, C.success, '#9333EA'];
+  const stageCounts = stageKeys.map(k => TICKETS_DATA.filter(t => t.status === k).length);
+
   window.charts.cStatus = new Chart(document.getElementById('cStatus'), {
     type: 'doughnut',
     data: {
-      labels: ['Resolved', 'In Progress', 'Open'],
+      labels: stageLabels,
       datasets: [{
-        data: [5, 2, 1],
-        backgroundColor: [C.success, C.info, C.danger],
+        data: stageCounts,
+        backgroundColor: stageColors,
         borderWidth: 2,
         borderColor: C.bgCard,
       }]
@@ -2744,12 +3147,11 @@ function rebuildCharts() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutout: '65%',
+      cutout: '60%',
       onClick: (evt, items) => {
         if (items.length > 0) {
           const idx = items[0].index;
-          const status = ['resolved', 'progress', 'open'][idx];
-          renderDashTable(status);
+          renderDashTable(stageKeys[idx]);
           document.getElementById('dashTableCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       },
@@ -2757,7 +3159,10 @@ function rebuildCharts() {
         e.native.target.style.cursor = items[0] ? 'pointer' : 'default';
       },
       plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 12 } },
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 10, padding: 8, font: { size: 11 } }
+        },
         tooltip: {
           callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed} tiket` }
         }
@@ -2769,10 +3174,10 @@ function rebuildCharts() {
   window.charts.cKat = new Chart(document.getElementById('cKat'), {
     type: 'doughnut',
     data: {
-      labels: ['Technical', 'Functional'],
+      labels: ['Technical', 'Functional', 'Information'],
       datasets: [{
-        data: [5, 3],
-        backgroundColor: [C.purple, C.info],
+        data: [8, 4, 1],
+        backgroundColor: [C.purple, C.info, C.warning],
         borderWidth: 2,
         borderColor: C.bgCard,
       }]
@@ -2787,31 +3192,40 @@ function rebuildCharts() {
     }
   });
 
-  // Weekly: bars for masuk/selesai + line for carry over
+  // Weekly: bars for masuk/resolved/resolved-NTI + line for carry over
+  // Data dari sheet Weekly_Summary
   window.charts.cWeekly = new Chart(document.getElementById('cWeekly'), {
     data: {
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
       datasets: [
         {
           type: 'bar',
           label: 'Tiket Masuk',
-          data: [3, 0, 3, 2],
+          data: [2, 0, 11, 0, 0],
           backgroundColor: C.primary,
           borderRadius: 4,
-          maxBarThickness: 36,
+          maxBarThickness: 28,
         },
         {
           type: 'bar',
-          label: 'Tiket Selesai',
-          data: [1, 1, 2, 1],
+          label: 'Tiket Resolved',
+          data: [1, 1, 1, 3, 0],
           backgroundColor: C.success,
           borderRadius: 4,
-          maxBarThickness: 36,
+          maxBarThickness: 28,
+        },
+        {
+          type: 'bar',
+          label: 'Resolved NTI',
+          data: [1, 1, 6, 3, 0],
+          backgroundColor: C.info,
+          borderRadius: 4,
+          maxBarThickness: 28,
         },
         {
           type: 'line',
           label: 'Carry Over',
-          data: [0, 2, 1, 2],
+          data: [1, 0, 10, 7, 8],
           borderColor: C.warning,
           backgroundColor: C.warning,
           borderWidth: 2.5,
@@ -2828,7 +3242,7 @@ function rebuildCharts() {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'top', align: 'end', labels: { boxWidth: 10, padding: 12 } },
+        legend: { position: 'top', align: 'end', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } },
         tooltip: {
           backgroundColor: C.bgCard,
           titleColor: C.text2,
@@ -2848,6 +3262,96 @@ function rebuildCharts() {
       }
     }
   });
+
+  // ═══════════════ WEEKLY SUMMARY CHART (di tab Weekly Log) ═══════════════
+  const weeklySummaryEl = document.getElementById('cWeeklySummary');
+  if (weeklySummaryEl) {
+    window.charts.cWeeklySummary = new Chart(weeklySummaryEl, {
+      data: {
+        labels: ['Week 1\n15–17 Apr', 'Week 2\n20–24 Apr', 'Week 3\n27 Apr–1 Mei', 'Week 4\n4–8 Mei', 'Week 5\n11–15 Mei'],
+        datasets: [
+          {
+            type: 'bar',
+            label: 'Tiket Masuk',
+            data: [2, 0, 11, 0, 0],
+            backgroundColor: C.primary,
+            borderRadius: 4,
+            maxBarThickness: 32,
+          },
+          {
+            type: 'bar',
+            label: 'Resolved (Done)',
+            data: [1, 1, 1, 3, 0],
+            backgroundColor: C.success,
+            borderRadius: 4,
+            maxBarThickness: 32,
+          },
+          {
+            type: 'bar',
+            label: 'Resolved NTI',
+            data: [1, 1, 6, 3, 0],
+            backgroundColor: C.info,
+            borderRadius: 4,
+            maxBarThickness: 32,
+          },
+          {
+            type: 'line',
+            label: 'Carry Over',
+            data: [1, 0, 10, 7, 8],
+            borderColor: C.warning,
+            backgroundColor: C.warning,
+            borderWidth: 3,
+            tension: 0.35,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointBackgroundColor: C.warning,
+            pointBorderColor: C.bgCard,
+            pointBorderWidth: 2.5,
+            order: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false }, // Custom legend in HTML
+          tooltip: {
+            backgroundColor: C.bgCard,
+            titleColor: C.text2,
+            bodyColor: C.text2,
+            borderColor: C.border,
+            borderWidth: 1,
+            padding: 12,
+            titleFont: { weight: '700' },
+            callbacks: {
+              title: ctx => ctx[0].label.replace('\n', ' · '),
+              label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} tiket`,
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { size: 10.5 },
+              callback: function(val) {
+                const label = this.getLabelForValue(val);
+                return label.split('\n');
+              }
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: C.border, drawBorder: false },
+            ticks: { stepSize: 1, font: { size: 11 } },
+            title: { display: true, text: 'Jumlah Tiket', font: { size: 11, weight: '600' }, color: C.text2 }
+          }
+        }
+      }
+    });
+  }
 }
 
 rebuildCharts();
